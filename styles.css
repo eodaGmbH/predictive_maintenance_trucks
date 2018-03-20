@@ -1,0 +1,13 @@
+.bordered {
+	color: #555;
+	border-radius: 10px;
+	text-align: center;
+	padding: 10px 10px 10px 36px;
+	margin-top: 10px; margin-right: 10px; margin-bottom: 10px;
+	border: 1px solid #88ab33; 
+}
+
+pre {
+	width: 23vw;
+}
+
