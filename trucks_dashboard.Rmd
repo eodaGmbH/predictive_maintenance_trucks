@@ -55,7 +55,7 @@ Der Fehler 1. Art, hier **F**alse **P**ositive, bedeutet, dass man einer Observa
 **<u>Fehler 2. Art (FN):</u>** <br>
 Der Fehler 2. Art, hier **F**alse **N**egative, bedeutet, dass man eine Observation als fehlerfrei einstuft, obwohl das Fahrezeug einen Fehler im LDS aufweist. <br><br>
 <div class = "bordered">
-*Der Fehler 1. Art ist logischerweise deutlich kostengünstiger gewichtet als der Fehler 2. Art. Es ist wesentlich günstiger einen LKW fälschlicherweise in die Werkstatt zur Überprüfung zu schicken, als dass ein LKW, bedingt durch einen LDS-Fehler, auf der Strecke liegen bleibt.*
+*Der Fehler 1. Art ist logischerweise deutlich kostengünstiger gewichtet als der Fehler 2. Art. Es ist wesentlich günstiger einen LKW fälschlicherweise in die Werkstatt zur Überprüfung zu schicken, als dass ein LKW, bedingt durch einen **LDS-Fehler**, auf der Strecke liegen bleibt.*
 </div> <br><br>
 
 ### **Hintergrund** {data-height=300}
@@ -68,10 +68,8 @@ Column {data-width=3}
 
 ###
 <center>
-<div style = "margin-top: 15vh"> <img src = "chart.png" alt = "Chart" height = "100%" " width = "70%"></div>
+<div> <img src = "slide_eoda.jpg" alt = "Chart" height = "100%" " width = "100%"></div>
 </center>
-<br><br><br><br><br><br>
-<div style = "float: right; text-align: right;"> <img src = "eoda_logo.png" alt = "Eoda Logo" height = "25%" " width = "25%"></div>
 
 Datensatz {data-orientation=rows}
 ===============================================
@@ -80,15 +78,29 @@ Row {data-height=200}
 -----------------------------------------------
 
 ### **Histogramm-Feature**
-Aus der Beschreibung des Scnaia-Trucks Problems lässt sich herauslesen, dass gewisse Feature Histogrammdaten abbilden. 
-Das heißt, dass ein Feature auf mehrere Container aufgeteilt ist, wobei der Wert im Container $A_i$ die Aufenthaltsdauer in der Klasse $i$ bedeutet, wobei $A$ das obergeordnete Feature ist. <br>
-Beispielverteilung des Features **ag**:
+Aus der Beschreibung des Scania-Trucks Problems lässt sich herauslesen, dass gewisse Feature Histogrammdaten abbilden. 
+Das heißt, dass ein Feature auf mehrere Container aufgeteilt ist, wobei der Wert im Container $A_i$ die Aufenthaltsdauer in der Klasse $i$ bedeutet und $A$ das obergeordnete Feature ist. <br>
+Beispielverteilung der Feature **ag** & **ay**:
 
+<div style = "display: inline;">
+
+<div style = "display: inline-block; width: 48%;"> 
 ```{r table_hist_ag}
 # Example-table for the histogramm-feature
-kable(data_trucks_training[1:8, str_detect(colnames(data_trucks_training), "ag_00+") == TRUE], "html", caption = "Histogrammdaten") %>%
+kable(data_trucks_training[1:5, str_detect(colnames(data_trucks_training), "ag_00+") == TRUE], "html", caption = "Histogrammdaten ag") %>%
   kable_styling("striped")
 ```
+</div>
+
+<div style = "display: inline-block; width: 48%; margin-left: 15px;"> 
+```{r table_hist_ay}
+# Example-table for the histogramm-feature
+kable(data_trucks_training[1:5, str_detect(colnames(data_trucks_training), "ay_00+") == TRUE], "html", caption = "Histogrammdaten ay") %>%
+  kable_styling("striped")
+```
+</div>
+
+</div>
 
 Row {data-height=300 .tabset .tabset-fade}
 -----------------------------------------------
@@ -332,9 +344,9 @@ Column {data-width=100}
 
 ### **NA-Analyse**
 
-Der Scania-Trucks Datensatz weist eine hohe Zahl an fehlenden Werten ( hier im Folgenden **NA's** genannt) auf. Dies kann insbesondere beim modellieren zu Problemen führen, da fehlende Werte für den **Klassifizierungsalgorithmus** unmöglich zu handlen sind.
-Eine Möglichkeit besteht darin, eine gewisse Anzahl an NA's zuzulassen und demnach die Anzahl der Feature anhand dieser Grenze zu reduzieren. Alle Observationen, welche nach der **Featurereduktion** noch NA's enthalten, werden entfernt. <br>
-Folgende Tabelle liefert einen Überblick über die **NA Grenzen**: <br>
+Der Scania-Trucks Datensatz weist eine hohe Zahl an fehlenden Werten ( hier im Folgenden **NA's** genannt) auf. Dies kann insbesondere beim modellieren zu Problemen führen, da fehlende Werte für den **Klassifizierungsalgorithmus** unmöglich zu behandeln sind. <br>
+Eine Möglichkeit besteht darin, eine gewisse Anzahl an NA's zuzulassen und dementsprechend die Anzahl der Feature zu reduzieren. Alle Observationen, welche nach der **Featurereduktion** noch NA's enthalten, werden entfernt. <br>
+Folgende Tabelle liefert einen Überblick über die **NA Grenzen**: 
 
 ```{r NA_data_frame, eval = FALSE}
 # setup the whole dataset
@@ -395,29 +407,31 @@ ggplot(result_NA) +
   geom_point(aes(na_number, vars_percent), color = "#88ab33") +
   geom_point(aes(na_number, obs_percent), color = "#F98948") +
   geom_point(aes(na_number, obs_pos_percent), color = "#437F97") +
-  xlab("Number of NA's") + ylab("") +
+  xlab("NA Anzahl") + ylab("") +
   scale_y_continuous(limits = c(1, 100)) 
 ```
 </center>
+
 
 <br>
 
 <div class = "bordered">
 <center>**Featuregewinnung:**</center> <br>
-Aus der Tabelle lässt sich erkennen, dass bei den unterschiedlichen NA-Grenzen die Anzahl an gewonnener Feature stark schwankt. So gewinnt man beim Sprung von 0 auf 195 NA's lediglich 1 Feature dazu, beim Sprung von 861 auf 863 Feature aber direkt 30 Feature. Das NA verhalten ist also alles andere als proportional. Die Entscheidung, welche NA-Grenze man als Auschlussverfahren nimmt, hängt aber nicht nur von der Featuregewinnung ab.
+Aus der Tabelle lässt sich erkennen, dass bei den unterschiedlichen NA-Grenzen die Anzahl an **gewonnener Feature** stark schwankt. So gewinnt man beim Sprung von 0 auf 195 NA's lediglich 1 Feature dazu, beim Sprung von 861 auf 863 Feature aber direkt 30 Feature. Das **NA-Verhalten** ist also alles andere als proportional. <br>
+Die Entscheidung, welche NA-Grenze man als Auschlussverfahren nimmt, hängt aber nicht nur von der Featuregewinnung ab.
 </div> <br>
 <div class = "bordered">
 <center>**Allgemeiner Observationsverlust:**</center> <br>
-Alle Feature im späteren Modell zu berücksichten bringt nichts, wenn man nur noch auf 5% der ursprünglichen Daten trainieren kann. Deshalb spielt der **Observationsverlust** eine starke Rolle in der Entscheidung. Hier zeichnet sich ein starker Sprung von 5598 auf 12012 NA's ab. Evaluiert man also die Grenzen anhand des Observationsverlustes, sollte man nicht über die Grenze von 5598 hinaus gehen, da direkt danach c.a. 10% der LKW's zusätzlich verloren gehen. 
+Alle Feature im späteren Modell zu berücksichten würde nichts bringen, wenn man nur noch auf 5% der ursprünglichen Daten trainieren kann. Deshalb spielt der **Observationsverlust** eine starke Rolle in der Entscheidung. Hier zeichnet sich ein starker Sprung von 5598 auf 12012 NA's ab. Evaluiert man also die Grenzen anhand des Observationsverlustes, sollte man nicht über die Grenze von 5598 hinaus gehen, da direkt danach c.a. 10% der LKW's zusätzlich verloren gehen. 
 </div> <br>
-Normalerweise wären dass bereits ausreichende Informationen, um eine fundierte Meinung über die Wahl der NA-Grenze zu treffen. Der Scania-Trucks Datensatz weist allerdings ein noch größeres Problem auf. Von den 76000 Observationen sind lediglich **1375** fehlerhaft. Dadurch könnte es passieren, dass wir bei der Wahl der NA-Grenze alle fehlerhaften Observationen verlieren. <br>
+Normalerweise wären dass bereits ausreichend Informationen, um eine fundierte Meinung über die Wahl der NA-Grenze zu treffen. Der Scania-Trucks Datensatz weist allerdings ein noch größeres Problem auf. Von den 76000 Observationen sind lediglich **1375** fehlerhaft. Dadurch könnte es passieren, dass wir bei der Wahl der NA-Grenze alle fehlerhaften Observationen verlieren. <br>
 Demnach muss zusätzlich folgende Variable mit einkalkuliert werden: <br><br>
 <div class = "bordered">
 <center>**Fehlerhafter Observationsverlust:**</center> <br>
 Der fehlerhafte Oberservationsverlust beschreibt die Anzahl der Observationen die bei der Wahl der NA-Grenze verloren gehen und zusätzlich einen Fehler im LDS aufweisen. Anhand der geringen Fehlerrate im Datensatz wäre es fatal, zu viele der fehlerhaften Fahrzeuge zu verlieren, da ein Modell so möglicherweise auf ausschließlich fehlerfreien Daten trainieren könnte. Die Grenze für fehlerhafte Observationen findet sich in der Tabelle offensichtlich beim Sprung von 928 NA's auf 3188 NA's. Obwohl man hier nur 1 Feature dazu gewinnen würde, fallen 30% der fehlerhaften Observationen dadurch raus. Die Grenze ist demnach also bei 928 NA's zu setzen.
 </div> </br>
 <center>**<u>Fazit:</u>**</center>
-Die NA-Analyse zeigt, dass verschiedene Breakpoints existieren, um eine gewisse Anzahl von Featuren zu erhalten / nicht zu viele Observationen zu verlieren. Um auf dem kompletten Trainingsset vorhersagen treffen zu können, müssen die fehlenden Werte aber aufgefüllt werden, anstatt **NA-Reduktion** zu betreiben. Hierzu stehen Möglichkeiten wie **knn-imputation** oder **median-imputation** zur Verfügung. Im Folgenden werden diese Möglichkeiten evaluiert.
+Die NA-Analyse zeigt, dass verschiedene Breakpoints existieren, um eine gewisse Anzahl von Featuren zu erhalten / nicht zu viele Observationen zu verlieren. Um auf dem kompletten Trainingsset vorhersagen treffen zu können, müssen die fehlenden Werte aber aufgefüllt werden, anstatt **NA-Reduktion** zu betreiben. Hierzu stehen Möglichkeiten wie beispielsweise die **knn-imputation** zur Verfügung. Im Folgenden wird diese Möglichkeiten evaluiert.
 
 
 
@@ -431,19 +445,23 @@ Column {data-width=100}
 Die **Datensatzanalyse** hat gezeigt, dass viele der Histogrammdaten nicht gleichmäßig ( normal- ) verteilt sind.
 Oftmals sind Container eines Histogrammfeatures für fast alle Observationen 0, andere Containere hingegen sind mit den unterschiedlichsten Größenordnungen von Zahlen gefüllt. <br>
 Hinzu kommt, dass die Werte in den verschiedenen Containern **absolute** Daten sind, das heißt: <br><br>
+<center>
 <div class = "bordered" style = "width: 30vw; font-size: 20px;">
 **$\sum_{i = 0}^{9}{A_i}$** <br><br>
 ist **nicht notwendigerweise gleich** für alle Observationen.
 </div> 
+</center>
 
 <br>
 
 Um das Problem der absoluten Histogrammdaten zu beseitigen ist es sinnvoll diese zu **relativieren**. Man stellt also jeden absoluten Wert $i$ in **prozentuellen Bezug** zu der **Gesamtaufenthaltszeit** jeder Observation in der Klasse $A$. <br>
 Dadurch ergibt sich folgende Formel für die neuen Werte $\tilde{A}$: <br><br>
+<center>
 <div class = "bordered" style = "font-size: 20px; width: 30vw;">
 **$\tilde{A}_i = \frac{A_i}{\sum_{i = 0}^{9}{A_i}}  mit  \sum_{i = 0}^{9}{\tilde{A}_i} = 1$** <br><br>
 für **jede** Observation.
 </div>
+</center>
 <br>
 
 **<u>Vorher:</u>** <br>
@@ -610,11 +628,12 @@ kable(data_trucks_knn_training[["ad_000"]] %>% head(5), "html") %>%
 </div>
 
 
+
 Modellierung
 ===============================
 
 ```{r evaluation_functions, eval = FALSE}
-# helperfunctions for cost evaluation und sensitivity / specificity calculation for given thresholds
+# helperfunctions for cost evaluation and sensitivity / specificity calculation for given thresholds
 sensspec_rate <- function(threshold, predicted_set, test_set) {
   predicted_class <- ifelse(predicted_set$neg > threshold, "neg", "pos")
   return(confusionMatrix(predicted_class, test_set$class)$table %>% data.frame() %>% extract2("Freq"))
@@ -1026,12 +1045,34 @@ kable(var_imp_df_cv10_2.5k[, 1:2] %>% head(5), "html") %>%
 
 <center>**$Laufzeit \approx 5 \space Stunden \space 57 \space Minuten$**</center>
 
+Über Uns {data-orientation=rows}
+=======================================================
 
+<u>Über die eoda GmbH:</u> <br>
+**eoda ist ein auf Data Science spezialisiertes IT-Unternehmen. Das Portfolio umfasst Consulting, Analytic Services, Software und Training. Die Leistungen erstrecken sich dabei über den gesamten Workflow vom Datenmanagement über die Analyse und Interpretation der Ergebnisse bis hin zur Integration von Analyse-Workflows in bestehende Prozesse und Applikationen. Das interdisziplinäre Team von eoda kombiniert fundiertes Wissen über Geschäftsprozesse mit der kompetenten Anwendung der passenden statistischen Analyseverfahren.**
 
+Als Pionier in Deutschland für die Open Source Programmiersprache R bietet eoda ein umfassendes Portfolio für den produktiven Einsatz von R. Spark, AI-Frameworks wie tensorflow oder MxNet und andere Data-Science-Sprachen wie Python und Julia vervollständigen unser Toolkit und helfen uns, die täglichen Herausforderungen von Data Science zu meistern.
 
+eoda bietet ein ganzheitliches Trainings- und Qualifizierungskonzept für R und Python. Wir bieten Schulungen in deutscher und englischer Sprache an.
 
+Für weitere Informationen, kontaktieren Sie uns über:
+<center><a href="www.eoda.de">www.eoda.de</a></center>
 
+<br><br><br><br><br><br><br><br>
 
+<u>About eoda GmbH:</u> <br>
+**eoda is an IT company specialized in data science. Its portfolio comprises consulting, analytic services, software and training. The services cover the entire workflow from data acquisition to analysis to the interpretation of results and the integration of analysis workflows into existing processes and applications. The interdisciplinary team of eoda combines a profound knowledge of business processes with a competent usage of suitable methods for statistical analysis.**
+
+As a pioneer in Germany for the open source statistical language R, eoda provides a comprehensive portfolio for the productive application of R. The use of spark, AI frameworks like tensorflow or MxNet and other data science languages like Python and Julia complete our toolkit and help us master the daily challenges of data science.
+
+eoda provides a unique holistic training and qualification concept for R and Python. We can provide trainings in both German and English.
+
+For further information, contact us on:
+<center><a href = "www.eoda.de">www.eoda.de</a></center>
+
+<br><br><br><br><br><br><br><br><br>
+
+<center><img src = "eoda_logo.png" alt = "Logo" height = "35%" width = "35%"></center>
 
 
 
