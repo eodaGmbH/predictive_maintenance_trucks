@@ -19,9 +19,6 @@ library(ggplot2)
 library(stringr)
 library(parallel)
 library(doParallel)
-library(Deriv)
-library(caTools)
-library(glmnet)
 library(knitr)
 library(kableExtra)
 library(rmarkdown)
@@ -61,14 +58,14 @@ Der Fehler 2. Art, hier **F**alse **N**egative, bedeutet, dass man eine Observat
 ### **Hintergrund** {data-height=300}
 Das Scania-Trucks Problem wurde auf der **IDA 2016** vorgestellt. Die IDA ist ein internationales Symposium über intelligente Datenanalyse, welche 2016 im Kontext des **maschinellen Lernens** das Industrieproblem für die Öffentlichkeit zugänglich gemacht hat. Scania, Mitsponsor der IDA, hat auf die beiden kostengünstigstens Modelle einen Preis von 500$ aussgeschrieben, sowie einen Rednerspot auf der **IDA** selbst. <br><br>
 
-<div id = "bordered> <img src = "Scania.png" alt = "Scania Logo" height = "100%" " width = "100%"></div>
+<div> <img src = "Scania.png" alt = "Scania Logo" height = "100%" " width = "100%"></div>
 
 Column {data-width=3}
 ----------------------------------------------------------------------
 
 ###
 <center>
-<div> <img src = "slide_eoda.jpg" alt = "Chart" height = "100%" " width = "100%"></div>
+<div style = "display: inline-block; height: 90vh; "> <img src = "Titelbild.png" alt = "Titel" height = "100%"  width = "100%"></div>
 </center>
 
 Datensatz {data-orientation=rows}
@@ -115,7 +112,9 @@ ag_mean_df <- data.frame(labels = ag_labels, mean = ag_mean)
 ```
 
 
-<div style = "display: inline-block; width: 45vw; margin-top: 4vh;">
+<div style = "display: inline-block; width: 100%;">
+
+<div style = "float: left; margin-top: 20px;">
 ```{r plot_ag, out.width = "95%", fig.height = 3}
 # plot ag distribution
 ggplot(ag_mean_df, aes(x = labels, y = mean)) +
@@ -126,18 +125,20 @@ ggplot(ag_mean_df, aes(x = labels, y = mean)) +
 ```
 </div>
 
-<div style = "display: inline-block; width: 45vw; margin-top: 4vh; margin-left: 5vw;">
-```{r plot_ag_log, out.width = "95%", fig.height = 3}
-# plot log(ag) distribution
-ggplot(ag_mean_df, aes(x = labels, y = log(mean))) +
-  geom_bar(stat = "identity", fill = "#88ab33") +
-  scale_y_continuous(trans = "log10") +
-  theme_minimal() +
-  ggtitle("Verteilung von log(Mittelwert)") +
-  xlab("") + ylab("")
+<div style = "display: inline-block; float: left; width: 49%; margin-top: 70px;">
+```{r table_ag, out.width = "95%"}
+ag_summary <- c()
+sub_data_trucks <- data_trucks[which(colnames(data_trucks) == "ag_000"):which(colnames(data_trucks) == "ag_009")]
+for(i in 1:10) {
+  ag_summary <- rbind(ag_summary, summary(sub_data_trucks[[i]]))
+}
+ag_summary <- cbind("Var" = paste0("ag_00", 0:9), ag_summary)
+kable(ag_summary %>% as.data.frame(row.names = TRUE) %>% mutate_at(-1, funs(as.character(.) %>% as.numeric())), "html", digits = 2) %>%
+  kable_styling("striped", full_width = TRUE)
 ```
 </div>
 
+</div>
 ### Feature **ay**
 
 ```{r mean_hist_ay}
@@ -148,7 +149,9 @@ ay_mean_df <- data.frame(labels = ay_labels, mean = ay_mean)
 ```
 
 
-<div style = "display: inline-block; width: 45vw; margin-top: 4vh;">
+<div style = "display: inline-block; width: 100%;">
+
+<div style = "float: left; margin-top: 20px;">
 ```{r plot_ay, out.width = "95%", fig.height = 3}
 # plot ay distribution
 ggplot(ay_mean_df, aes(x = labels, y = mean)) +
@@ -159,16 +162,19 @@ ggplot(ay_mean_df, aes(x = labels, y = mean)) +
 ```
 </div>
 
-<div style = "display: inline-block; width: 45vw; margin-top: 4vh; margin-left: 5vw;">
-```{r plot_ay_log, out.width = "95%", fig.height = 3}
-# plot log(ay) distribution
-ggplot(ay_mean_df, aes(x = labels, y = log(mean))) +
-  geom_bar(stat = "identity", fill = "#88ab33") +
-  scale_y_continuous(trans = "log10") +
-  theme_minimal() +
-  ggtitle("Verteilung von log(Mittelwert)") +
-  xlab("") + ylab("")
+<div style = "display: inline-block; float: left; width: 49%; margin-top: 70px;">
+```{r table_ay, out.width = "95%"}
+ay_summary <- c()
+sub_data_trucks <- data_trucks[which(colnames(data_trucks) == "ay_000"):which(colnames(data_trucks) == "ay_009")]
+for(i in 1:10) {
+  ay_summary <- rbind(ay_summary, summary(sub_data_trucks[[i]]))
+}
+ay_summary <- cbind("Var" = paste0("ay_00", 0:9), ay_summary)
+kable(ay_summary %>% as.data.frame(row.names = TRUE) %>% mutate_at(-1, funs(as.character(.) %>% as.numeric())), "html", digits = 2) %>%
+  kable_styling("striped", full_width = TRUE)
 ```
+</div>
+
 </div>
 
 ### Feature **az**
@@ -181,7 +187,9 @@ az_mean_df <- data.frame(labels = az_labels, mean = az_mean)
 ```
 
 
-<div style = "display: inline-block; width: 45vw; margin-top: 4vh;">
+<div style = "display: inline-block; width: 100%;">
+
+<div style = "float: left; margin-top: 20px;">
 ```{r plot_az, out.width = "95%", fig.height = 3}
 # plot az distribution
 ggplot(az_mean_df, aes(x = labels, y = mean)) +
@@ -192,16 +200,19 @@ ggplot(az_mean_df, aes(x = labels, y = mean)) +
 ```
 </div>
 
-<div style = "display: inline-block; width: 45vw; margin-top: 4vh; margin-left: 5vw;">
-```{r plot_az_log, out.width = "95%", fig.height = 3}
-# plot log(az) distribution
-ggplot(az_mean_df, aes(x = labels, y = log(mean))) +
-  geom_bar(stat = "identity", fill = "#88ab33") +
-  scale_y_continuous(trans = "log10") +
-  theme_minimal() +
-  ggtitle("Verteilung von log(Mittelwert)") +
-  xlab("") + ylab("")
+<div style = "display: inline-block; float: left; width: 49%; margin-top: 70px;">
+```{r table_az, out.width = "95%"}
+az_summary <- c()
+sub_data_trucks <- data_trucks[which(colnames(data_trucks) == "az_000"):which(colnames(data_trucks) == "az_009")]
+for(i in 1:10) {
+  az_summary <- rbind(az_summary, summary(sub_data_trucks[[i]]))
+}
+az_summary <- cbind("Var" = paste0("az_00", 0:9), az_summary)
+kable(az_summary %>% as.data.frame(row.names = TRUE) %>% mutate_at(-1, funs(as.character(.) %>% as.numeric())), "html", digits = 2) %>%
+  kable_styling("striped", full_width = TRUE)
 ```
+</div>
+
 </div>
 
 ### Feature **ba**
@@ -214,7 +225,9 @@ ba_mean_df <- data.frame(labels = ba_labels, mean = ba_mean)
 ```
 
 
-<div style = "display: inline-block; width: 45vw; margin-top: 4vh;">
+<div style = "display: inline-block; width: 100%;">
+
+<div style = "float: left; margin-top: 20px;">
 ```{r plot_ba, out.width = "95%", fig.height = 3}
 # plot ba distribution
 ggplot(ba_mean_df, aes(x = labels, y = mean)) +
@@ -225,16 +238,19 @@ ggplot(ba_mean_df, aes(x = labels, y = mean)) +
 ```
 </div>
 
-<div style = "display: inline-block; width: 45vw; margin-top: 4vh; margin-left: 5vw;">
-```{r plot_ba_log, out.width = "95%", fig.height = 3}
-# plot log(ba) distribution
-ggplot(ba_mean_df, aes(x = labels, y = log(mean))) +
-  geom_bar(stat = "identity", fill = "#88ab33") +
-  scale_y_continuous(trans = "log10") +
-  theme_minimal() +
-  ggtitle("Verteilung von log(Mittelwert)") +
-  xlab("") + ylab("")
+<div style = "display: inline-block; float: left; width: 49%; margin-top: 70px;">
+```{r table_ba, out.width = "95%"}
+ba_summary <- c()
+sub_data_trucks <- data_trucks[which(colnames(data_trucks) == "ba_000"):which(colnames(data_trucks) == "ba_009")]
+for(i in 1:10) {
+  ba_summary <- rbind(ba_summary, summary(sub_data_trucks[[i]]))
+}
+ba_summary <- cbind("Var" = paste0("ba_00", 0:9), ba_summary)
+kable(ba_summary %>% as.data.frame(row.names = TRUE) %>% mutate_at(-1, funs(as.character(.) %>% as.numeric())), "html", digits = 2) %>%
+  kable_styling("striped", full_width = TRUE)
 ```
+</div>
+
 </div>
 
 ### Feature **cn**
@@ -247,7 +263,9 @@ cn_mean_df <- data.frame(labels = cn_labels, mean = cn_mean)
 ```
 
 
-<div style = "display: inline-block; width: 45vw; margin-top: 4vh;">
+<div style = "display: inline-block; width: 100%;">
+
+<div style = "float: left; margin-top: 20px;">
 ```{r plot_cn, out.width = "95%", fig.height = 3}
 # plot cn distribution
 ggplot(cn_mean_df, aes(x = labels, y = mean)) +
@@ -258,16 +276,19 @@ ggplot(cn_mean_df, aes(x = labels, y = mean)) +
 ```
 </div>
 
-<div style = "display: inline-block; width: 45vw; margin-top: 4vh; margin-left: 5vw;">
-```{r plot_cn_log, out.width = "95%", fig.height = 3}
-# plot log(cn) distribution
-ggplot(cn_mean_df, aes(x = labels, y = log(mean))) +
-  geom_bar(stat = "identity", fill = "#88ab33") +
-  scale_y_continuous(trans = "log10") +
-  theme_minimal() +
-  ggtitle("Verteilung von log(Mittelwert)") +
-  xlab("") + ylab("")
+<div style = "display: inline-block; float: left; width: 49%; margin-top: 70px;">
+```{r table_cn, out.width = "95%"}
+cn_summary <- c()
+sub_data_trucks <- data_trucks[which(colnames(data_trucks) == "cn_000"):which(colnames(data_trucks) == "cn_009")]
+for(i in 1:10) {
+  cn_summary <- rbind(cn_summary, summary(sub_data_trucks[[i]]))
+}
+cn_summary <- cbind("Var" = paste0("cn_00", 0:9), cn_summary)
+kable(cn_summary %>% as.data.frame(row.names = TRUE) %>% mutate_at(-1, funs(as.character(.) %>% as.numeric())), "html", digits = 2) %>%
+  kable_styling("striped", full_width = TRUE)
 ```
+</div>
+
 </div>
 
 ### Feature **cs**
@@ -280,7 +301,9 @@ cs_mean_df <- data.frame(labels = cs_labels, mean = cs_mean)
 ```
 
 
-<div style = "display: inline-block; width: 45vw; margin-top: 4vh;">
+<div style = "display: inline-block; width: 100%;">
+
+<div style = "float: left; margin-top: 20px;">
 ```{r plot_cs, out.width = "95%", fig.height = 3}
 # plot cs distribution
 ggplot(cs_mean_df, aes(x = labels, y = mean)) +
@@ -291,16 +314,19 @@ ggplot(cs_mean_df, aes(x = labels, y = mean)) +
 ```
 </div>
 
-<div style = "display: inline-block; width: 45vw; margin-top: 4vh; margin-left: 5vw;">
-```{r plot_cs_log, out.width = "95%", fig.height = 3}
-# plot log(cs) distribution
-ggplot(cs_mean_df, aes(x = labels, y = log(mean))) +
-  geom_bar(stat = "identity", fill = "#88ab33") +
-  scale_y_continuous(trans = "log10") +
-  theme_minimal() +
-  ggtitle("Verteilung von log(Mittelwert)") +
-  xlab("") + ylab("")
+<div style = "display: inline-block; float: left; width: 49%; margin-top: 70px;">
+```{r table_cs, out.width = "95%"}
+cs_summary <- c()
+sub_data_trucks <- data_trucks[which(colnames(data_trucks) == "cs_000"):which(colnames(data_trucks) == "cs_009")]
+for(i in 1:10) {
+  cs_summary <- rbind(cs_summary, summary(sub_data_trucks[[i]]))
+}
+cs_summary <- cbind("Var" = paste0("cs_00", 0:9), cs_summary)
+kable(cs_summary %>% as.data.frame(row.names = TRUE) %>% mutate_at(-1, funs(as.character(.) %>% as.numeric())), "html", digits = 2) %>%
+  kable_styling("striped", full_width = TRUE)
 ```
+</div>
+
 </div>
 
 ### Feature **ee**
@@ -312,8 +338,9 @@ ee_mean <- sapply(data_trucks_training[, str_detect(colnames(data_trucks_trainin
 ee_mean_df <- data.frame(labels = ee_labels, mean = ee_mean)
 ```
 
+<div style = "display: inline-block; width: 100%;">
 
-<div style = "display: inline-block; width: 45vw; margin-top: 4vh;">
+<div style = "float: left; margin-top: 20px;">
 ```{r plot_ee, out.width = "95%", fig.height = 3}
 # plot ee distribution
 ggplot(ee_mean_df, aes(x = labels, y = mean)) +
@@ -324,16 +351,19 @@ ggplot(ee_mean_df, aes(x = labels, y = mean)) +
 ```
 </div>
 
-<div style = "display: inline-block; width: 45vw; margin-top: 4vh; margin-left: 5vw;">
-```{r plot_ee_log, out.width = "95%", fig.height = 3}
-# plot log(ee) distribution
-ggplot(ee_mean_df, aes(x = labels, y = log(mean))) +
-  geom_bar(stat = "identity", fill = "#88ab33") +
-  scale_y_continuous(trans = "log10") +
-  theme_minimal() +
-  ggtitle("Verteilung von log(Mittelwert)") +
-  xlab("") + ylab("")
+<div style = "display: inline-block; float: left; width: 49%; margin-top: 70px;">
+```{r table_ee, out.width = "95%"}
+ee_summary <- c()
+sub_data_trucks <- data_trucks[which(colnames(data_trucks) == "ee_000"):which(colnames(data_trucks) == "ee_009")]
+for(i in 1:10) {
+  ee_summary <- rbind(ee_summary, summary(sub_data_trucks[[i]]))
+}
+ee_summary <- cbind("Var" = paste0("ee_00", 0:9), ee_summary)
+kable(ee_summary %>% as.data.frame(row.names = TRUE) %>% mutate_at(-1, funs(as.character(.) %>% as.numeric())), "html", digits = 2) %>%
+  kable_styling("striped", full_width = TRUE)
 ```
+</div>
+
 </div>
 
 Feature-Engineering
@@ -662,7 +692,7 @@ Column {data-width=100}
 
 ### **Modellauswahl & Güte**
 
-Zur Lösung des **Klassifizierungsproblems** bietet sich ein **Random-Forest-Modell** an. Als **Parameterraster** werden folgende Werte benutzt:
+Zur Lösung des **Klassifizierungsproblems** wird ein **Random-Forest-Modell** verwendet. Als **Parameterraster** werden folgende Werte benutzt:
 <div class = "bordered">
 <center>$mtry = \sqrt{171} \approx 13$</center> <br>
 *Als **mtry** verwenden die Modelle den Standardwert aus $\sqrt{Anzahl \space der \space Feature}$.* <br><br>
@@ -1049,7 +1079,7 @@ kable(var_imp_df_cv10_2.5k[, 1:2] %>% head(5), "html") %>%
 =======================================================
 
 <u>Über die eoda GmbH:</u> <br>
-**eoda ist ein auf Data Science spezialisiertes IT-Unternehmen. Das Portfolio umfasst Consulting, Analytic Services, Software und Training. Die Leistungen erstrecken sich dabei über den gesamten Workflow vom Datenmanagement über die Analyse und Interpretation der Ergebnisse bis hin zur Integration von Analyse-Workflows in bestehende Prozesse und Applikationen. Das interdisziplinäre Team von eoda kombiniert fundiertes Wissen über Geschäftsprozesse mit der kompetenten Anwendung der passenden statistischen Analyseverfahren.**
+eoda ist ein auf Data Science spezialisiertes IT-Unternehmen. Das Portfolio umfasst Consulting, Analytic Services, Software und Training. Die Leistungen erstrecken sich dabei über den gesamten Workflow vom Datenmanagement über die Analyse und Interpretation der Ergebnisse bis hin zur Integration von Analyse-Workflows in bestehende Prozesse und Applikationen. Das interdisziplinäre Team von eoda kombiniert fundiertes Wissen über Geschäftsprozesse mit der kompetenten Anwendung der passenden statistischen Analyseverfahren.
 
 Als Pionier in Deutschland für die Open Source Programmiersprache R bietet eoda ein umfassendes Portfolio für den produktiven Einsatz von R. Spark, AI-Frameworks wie tensorflow oder MxNet und andere Data-Science-Sprachen wie Python und Julia vervollständigen unser Toolkit und helfen uns, die täglichen Herausforderungen von Data Science zu meistern.
 
@@ -1061,7 +1091,7 @@ Für weitere Informationen, kontaktieren Sie uns über:
 <br><br><br><br><br><br><br><br>
 
 <u>About eoda GmbH:</u> <br>
-**eoda is an IT company specialized in data science. Its portfolio comprises consulting, analytic services, software and training. The services cover the entire workflow from data acquisition to analysis to the interpretation of results and the integration of analysis workflows into existing processes and applications. The interdisciplinary team of eoda combines a profound knowledge of business processes with a competent usage of suitable methods for statistical analysis.**
+eoda is an IT company specialized in data science. Its portfolio comprises consulting, analytic services, software and training. The services cover the entire workflow from data acquisition to analysis to the interpretation of results and the integration of analysis workflows into existing processes and applications. The interdisciplinary team of eoda combines a profound knowledge of business processes with a competent usage of suitable methods for statistical analysis.
 
 As a pioneer in Germany for the open source statistical language R, eoda provides a comprehensive portfolio for the productive application of R. The use of spark, AI frameworks like tensorflow or MxNet and other data science languages like Python and Julia complete our toolkit and help us master the daily challenges of data science.
 
