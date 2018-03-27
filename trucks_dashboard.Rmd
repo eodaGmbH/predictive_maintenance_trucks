@@ -702,79 +702,8 @@ Zur Lösung des **Klassifizierungsproblems** wird ein **Random-Forest-Modell** v
 
 <br><br>
 
-<center>**<u>Modell 1:</u> 1-fache, 5-faltige Kreuzvalidierung mit 2500 Bäumen**</center> <br>
 
-```{r rf_model_cv1_2.5k, eval = FALSE}
-# model 1 - random forest with 1 times 5 folded cross validation and 2500 trees
-control_knn_cv_five_one <- trainControl(method = "repeatedcv",
-                                        number = 5,
-                                        repeats = 1,
-                                        allowParallel = TRUE,
-                                        classProbs = TRUE,
-                                        verboseIter = TRUE,
-                                        summaryFunction = mnLogLoss)
-
-grid_knn <- expand.grid(mtry = 13, splitrule = "gini", min.node.size = 1)
-
-cluster <- makeCluster(detectCores() - 1)
-registerDoParallel(cluster)
-
-system.time(
-  model_knn_cv1_2.5k <- train(class ~ .,
-                              data = data_trucks_knn_training,
-                              method = "ranger",
-                              metric = "logLoss",
-                              importance = "impurity",
-                              verbose = TRUE,
-                              trControl = control_knn_cv_five_one,
-                              tuneGrid = grid_knn,
-                              num.trees = 2500)
-)
-
-stopCluster(cluster)
-registerDoSEQ()
-
-```
-
-```{r evaluation_cv1_2.5k, eval = FALSE}
-# get optimal classificationthreshold to minimize the cost function for model 1
-pred_cv1_2.5k <- predict(model_knn_cv1_2.5k, data_trucks_knn_test, type = "prob")
-
-threshold_df_cv1_2.5k <- min_cost_func(seq(from = 0.95, to = 0.96, length.out = 100), pred_cv1_2.5k, data_trucks_knn_test)
-min_cost_place_cv1_2.5k <- which(threshold_df_cv1_2.5k$cost == min(threshold_df_cv1_2.5k$cost))[1]
-min_threshold_cv1_2.5k <- threshold_df_cv1_2.5k$threshold[min_cost_place_cv1_2.5k]
-min_cost_cv1_2.5k <- threshold_df_cv1_2.5k$cost[min_cost_place_cv1_2.5k]
-ggplot(threshold_df_cv1_2.5k, aes(x = threshold_df_cv1_2.5k$threshold, y = threshold_df_cv1_2.5k$cost)) +
-  geom_line()
-pred_cv1_2.5k_class <- ifelse(pred_cv1_2.5k$neg >= min_threshold_cv1_2.5k, "neg", "pos")
-```
-
-<div style = "display: inline">
-
-<div style = "display: inline-block; vertical-align: text-top;>
-```{r confusion_cv1_2.5k_display}
-# display the confusion Matrix of model 1
-confusionMatrix(pred_cv1_2.5k_class, data_trucks_knn_test$class)
-```
-</div>
-<div style = "display: inline-block; vertical-align: text-top;">
-```{r model_cv1_2.5k_display}
-# display model 1
-model_knn_cv1_2.5k
-```
-<br>
-<center>
-<u>***Ergebnis:***</u> <br><br>
-***Kosten:** `r min_cost_cv1_2.5k`* <br><br>
-***Kosten pro LKW:** `r min_cost_cv1_2.5k / nrow(data_trucks_knn_test)`*
-</center>
-</div>
-
-</div>
-
-<br><br>
-
-<center>**<u>Modell 2:</u> 10-fache, 5-faltige Kreuzvalidierung mit 500 Bäumen**</center> <br>
+<center>**<u>Modell 1:</u> 10-fache, 5-faltige Kreuzvalidierung mit 500 Bäumen**</center> <br>
 
 ```{r rf_model_cv10_0.5k, eval = FALSE}
 # model 2 - random forest with 10 times 5 folded cross validation and 500 trees
@@ -846,7 +775,7 @@ model_knn_cv10_0.5k
 
 <br><br>
 
-<center>**<u>Modell 3:</u> 10-fache, 5-faltige Kreuzvalidierung mit 1000 Bäumen**</center> <br>
+<center>**<u>Modell 2:</u> 10-fache, 5-faltige Kreuzvalidierung mit 1000 Bäumen**</center> <br>
 
 ```{r rf_model_cv10_1k, eval = FALSE}
 # model 3 - random forest with 10 times 5 folded cross validation with 1000 trees
@@ -918,7 +847,7 @@ model_knn_cv10_1k
 
 <br><br>
 
-<center>**<u>Modell 4:</u> 10-fache, 5-faltige Kreuzvalidierung mit 2500 Bäumen**</center> <br>
+<center>**<u>Modell 3:</u> 10-fache, 5-faltige Kreuzvalidierung mit 2500 Bäumen**</center> <br>
 
 ```{r rf_model_cv10_2.5k, eval = FALSE}
 # model 4- random forest with 10 times 5 folded cross validation with 2500 trees
@@ -1001,26 +930,9 @@ Column {data-width=100}
 
 <br>
 
+
+
 <center>**<u>Modell 1:</u>**</center> <br>
-
-```{r variable_importance_cv1_2.5k, eval = FALSE}
-# get variable importance of model 1
-var_imp_df_cv1_2.5k <- data.frame(Variable = rownames(varImp(model_knn_cv1_2.5k)[[1]]), Importance = varImp(model_knn_cv1_2.5k)[[1]]$Overall,
-                                  Rank = rank(varImp(model_knn_cv1_2.5k)[[1]]$Overall)) %>%
-  arrange(desc(Rank))
-```
-
-```{r var_imp_cv1_2.5k_table}
-# display variable importance of model 1
-kable(var_imp_df_cv1_2.5k[, 1:2] %>% head(5), "html") %>%
-  kable_styling("striped")
-```
-
-<center>**$Laufzeit \approx 45 \space Minuten$**</center>
-
-<br><br>
-
-<center>**<u>Modell 2:</u>**</center> <br>
 
 ```{r variable-_importance_cv10_0.5k, eval = FALSE}
 # get variable importance of model 2
@@ -1039,7 +951,7 @@ kable(var_imp_df_cv10_0.5k[, 1:2] %>% head(5), "html") %>%
 
 <br><br>
 
-<center>**<u>Modell 3:</u>**</center> <br>
+<center>**<u>Modell 2:</u>**</center> <br>
 
 ```{r variable_importance_cv10_1k, eval = FALSE}
 # get variable importance of model 3
@@ -1058,7 +970,7 @@ kable(var_imp_df_cv10_1k[, 1:2] %>% head(5), "html") %>%
 
 <br><br>
 
-<center>**<u>Modell 4:</u>**</center> <br>
+<center>**<u>Modell 3:</u>**</center> <br>
 
 ```{r variable_importance_cv10_2.5k, eval = FALSE}
 # get variable importance of model 4

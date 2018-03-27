@@ -6045,80 +6045,7 @@ Zur Lösung des <strong>Klassifizierungsproblems</strong> wird ein <strong>Rando
 </div>
 <p><br><br></p>
 <center>
-<strong><u>Modell 1:</u> 1-fache, 5-faltige Kreuzvalidierung mit 2500 Bäumen</strong>
-</center>
-<p><br></p>
-<div class="knitr-options" data-fig-width="576" data-fig-height="460">
-
-</div>
-<div class="knitr-options" data-fig-width="576" data-fig-height="460">
-
-</div>
-<div style="display: inline">
-<div style="display: inline-block; vertical-align: text-top;&gt;
-&lt;div class=" knitr-options" data-fig-width="576" data-fig-height="460">
-<div class="knitr-options" data-fig-width="576" data-fig-height="460">
-
-</div>
-<pre><code>Confusion Matrix and Statistics
-
-          Reference
-Prediction   neg   pos
-       neg 15130     9
-       pos   495   366
-                                          
-               Accuracy : 0.9685          
-                 95% CI : (0.9657, 0.9712)
-    No Information Rate : 0.9766          
-    P-Value [Acc &gt; NIR] : 1               
-                                          
-                  Kappa : 0.5785          
- Mcnemar's Test P-Value : &lt;2e-16          
-                                          
-            Sensitivity : 0.9683          
-            Specificity : 0.9760          
-         Pos Pred Value : 0.9994          
-         Neg Pred Value : 0.4251          
-             Prevalence : 0.9766          
-         Detection Rate : 0.9456          
-   Detection Prevalence : 0.9462          
-      Balanced Accuracy : 0.9722          
-                                          
-       'Positive' Class : neg             
-                                          </code></pre>
-</div>
-<div style="display: inline-block; vertical-align: text-top;">
-<div class="knitr-options" data-fig-width="576" data-fig-height="460">
-
-</div>
-<pre><code>Random Forest 
-
-60000 samples
-  170 predictor
-    2 classes: 'neg', 'pos' 
-
-No pre-processing
-Resampling: Cross-Validated (5 fold, repeated 1 times) 
-Summary of sample sizes: 48000, 48000, 48000, 48000, 48000 
-Resampling results:
-
-  logLoss   
-  0.02406398
-
-Tuning parameter 'mtry' was held constant at a value of 13
-
-Tuning parameter 'splitrule' was held constant at a value of gini
-
-Tuning parameter 'min.node.size' was held constant at a value of 1</code></pre>
-<br>
-<center>
-<u><strong><em>Ergebnis:</em></strong></u> <br><br> <em><strong>Kosten:</strong> 9450</em> <br><br> <em><strong>Kosten pro LKW:</strong> 0.590625</em>
-</center>
-</div>
-</div>
-<p><br><br></p>
-<center>
-<strong><u>Modell 2:</u> 10-fache, 5-faltige Kreuzvalidierung mit 500 Bäumen</strong>
+<strong><u>Modell 1:</u> 10-fache, 5-faltige Kreuzvalidierung mit 500 Bäumen</strong>
 </center>
 <p><br></p>
 <div class="knitr-options" data-fig-width="576" data-fig-height="460">
@@ -6189,7 +6116,7 @@ Tuning parameter 'min.node.size' was held constant at a value of 1</code></pre>
 </div>
 <p><br><br></p>
 <center>
-<strong><u>Modell 3:</u> 10-fache, 5-faltige Kreuzvalidierung mit 1000 Bäumen</strong>
+<strong><u>Modell 2:</u> 10-fache, 5-faltige Kreuzvalidierung mit 1000 Bäumen</strong>
 </center>
 <p><br></p>
 <div class="knitr-options" data-fig-width="576" data-fig-height="460">
@@ -6260,7 +6187,7 @@ Tuning parameter 'min.node.size' was held constant at a value of 1</code></pre>
 </div>
 <p><br><br></p>
 <center>
-<strong><u>Modell 4:</u> 10-fache, 5-faltige Kreuzvalidierung mit 2500 Bäumen</strong>
+<strong><u>Modell 3:</u> 10-fache, 5-faltige Kreuzvalidierung mit 2500 Bäumen</strong>
 </center>
 <p><br></p>
 <div class="knitr-options" data-fig-width="576" data-fig-height="460">
@@ -6377,74 +6304,6 @@ bj_000
 aq_000
 </td>
 <td style="text-align:right;">
-96.03868
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ci_000
-</td>
-<td style="text-align:right;">
-86.89566
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-dn_000
-</td>
-<td style="text-align:right;">
-79.24639
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-perc_ag_2
-</td>
-<td style="text-align:right;">
-76.72902
-</td>
-</tr>
-</tbody>
-</table>
-<center>
-<strong><span class="math inline">\(Laufzeit \approx 45 \space Minuten\)</span></strong>
-</center>
-<p><br><br></p>
-<center>
-<strong><u>Modell 2:</u></strong>
-</center>
-<p><br></p>
-<div class="knitr-options" data-fig-width="576" data-fig-height="460">
-
-</div>
-<div class="knitr-options" data-fig-width="576" data-fig-height="460">
-
-</div>
-<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
-<thead>
-<tr>
-<th style="text-align:left;">
-Variable
-</th>
-<th style="text-align:right;">
-Importance
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-bj_000
-</td>
-<td style="text-align:right;">
-100.00000
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-aq_000
-</td>
-<td style="text-align:right;">
 78.81031
 </td>
 </tr>
@@ -6479,7 +6338,7 @@ ck_000
 </center>
 <p><br><br></p>
 <center>
-<strong><u>Modell 3:</u></strong>
+<strong><u>Modell 2:</u></strong>
 </center>
 <p><br></p>
 <div class="knitr-options" data-fig-width="576" data-fig-height="460">
@@ -6547,7 +6406,7 @@ dn_000
 </center>
 <p><br><br></p>
 <center>
-<strong><u>Modell 4:</u></strong>
+<strong><u>Modell 3:</u></strong>
 </center>
 <p><br></p>
 <div class="knitr-options" data-fig-width="576" data-fig-height="460">
@@ -6618,7 +6477,7 @@ perc_ag_2
 </div>
 <div id="uber-uns" class="section level1" data-orientation="rows">
 <h1>Über Uns</h1>
-<p><u>Über die eoda GmbH:</u> <br> <strong>eoda ist ein auf Data Science spezialisiertes IT-Unternehmen. Das Portfolio umfasst Consulting, Analytic Services, Software und Training. Die Leistungen erstrecken sich dabei über den gesamten Workflow vom Datenmanagement über die Analyse und Interpretation der Ergebnisse bis hin zur Integration von Analyse-Workflows in bestehende Prozesse und Applikationen. Das interdisziplinäre Team von eoda kombiniert fundiertes Wissen über Geschäftsprozesse mit der kompetenten Anwendung der passenden statistischen Analyseverfahren.</strong></p>
+<p><u>Über die eoda GmbH:</u> <br> eoda ist ein auf Data Science spezialisiertes IT-Unternehmen. Das Portfolio umfasst Consulting, Analytic Services, Software und Training. Die Leistungen erstrecken sich dabei über den gesamten Workflow vom Datenmanagement über die Analyse und Interpretation der Ergebnisse bis hin zur Integration von Analyse-Workflows in bestehende Prozesse und Applikationen. Das interdisziplinäre Team von eoda kombiniert fundiertes Wissen über Geschäftsprozesse mit der kompetenten Anwendung der passenden statistischen Analyseverfahren.</p>
 <p>Als Pionier in Deutschland für die Open Source Programmiersprache R bietet eoda ein umfassendes Portfolio für den produktiven Einsatz von R. Spark, AI-Frameworks wie tensorflow oder MxNet und andere Data-Science-Sprachen wie Python und Julia vervollständigen unser Toolkit und helfen uns, die täglichen Herausforderungen von Data Science zu meistern.</p>
 <p>eoda bietet ein ganzheitliches Trainings- und Qualifizierungskonzept für R und Python. Wir bieten Schulungen in deutscher und englischer Sprache an.</p>
 Für weitere Informationen, kontaktieren Sie uns über:
@@ -6626,7 +6485,7 @@ Für weitere Informationen, kontaktieren Sie uns über:
 <a href="www.eoda.de">www.eoda.de</a>
 </center>
 <p><br><br><br><br><br><br><br><br></p>
-<p><u>About eoda GmbH:</u> <br> <strong>eoda is an IT company specialized in data science. Its portfolio comprises consulting, analytic services, software and training. The services cover the entire workflow from data acquisition to analysis to the interpretation of results and the integration of analysis workflows into existing processes and applications. The interdisciplinary team of eoda combines a profound knowledge of business processes with a competent usage of suitable methods for statistical analysis.</strong></p>
+<p><u>About eoda GmbH:</u> <br> eoda is an IT company specialized in data science. Its portfolio comprises consulting, analytic services, software and training. The services cover the entire workflow from data acquisition to analysis to the interpretation of results and the integration of analysis workflows into existing processes and applications. The interdisciplinary team of eoda combines a profound knowledge of business processes with a competent usage of suitable methods for statistical analysis.</p>
 <p>As a pioneer in Germany for the open source statistical language R, eoda provides a comprehensive portfolio for the productive application of R. The use of spark, AI frameworks like tensorflow or MxNet and other data science languages like Python and Julia complete our toolkit and help us master the daily challenges of data science.</p>
 <p>eoda provides a unique holistic training and qualification concept for R and Python. We can provide trainings in both German and English.</p>
 For further information, contact us on:
