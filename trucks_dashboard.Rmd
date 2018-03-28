@@ -26,6 +26,7 @@ library(rmarkdown)
 # global options
 knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(warning = FALSE)
+options(scipen = 100)
 
 # read csv data
 data_trucks_training <- read.csv("aps_failure_training_set.csv", sep = ",", skip = 20, na.strings = "na")
@@ -112,7 +113,7 @@ ag_mean_df <- data.frame(labels = ag_labels, mean = ag_mean)
 ```
 
 
-<div style = "display: inline-block; width: 100%;">
+<div style = "display: inline-block; width: 90vw;">
 
 <div style = "float: left; margin-top: 20px;">
 ```{r plot_ag, out.width = "95%", fig.height = 3}
@@ -987,6 +988,94 @@ kable(var_imp_df_cv10_2.5k[, 1:2] %>% head(5), "html") %>%
 
 <center>**$Laufzeit \approx 5 \space Stunden \space 57 \space Minuten$**</center>
 
+Kostenvergleich {data-orientation=rows}
+=======================================================
+Um die Kostenersparnis unseres "Siegermodells" festzustellen benötigen wir Vergleichswerte. Nehmen wir im Folgenden an, es existieren keine datenanalytischen Methoden um dem Luftdruckssystemfehler in gewisser Weise vorzubeugen. Wie würde man vorgehen?
+
+Row  {data-height=300}
+------------------------------------------------------
+
+### **Guessing at Random**
+Eine Möglichkeit bietet sich darin, einfach zu raten. Sicherlich nicht besonders effektiv, aber vielleicht lassen sich so ein paar der betroffenen LKW's vorsorglich in die Werkstatt schicken. <br>
+
+<center>
+```{r guessing_at_random}
+random_class <- character(length = length(data_trucks_test))
+rand_num <- runif(16000)
+random_class <- ifelse(rand_num < 0.5, "pos", "neg")
+
+random_conf <- confusionMatrix(random_class, data_trucks_test$class)
+random_conf
+
+random_table <- random_conf$table %>% as.data.frame() %>% extract2("Freq") 
+random_cost <- random_table[2] * 10 + random_table[3] * 500
+```
+</center>
+
+<br><br>
+
+<u>**Kosten: **</u>`r random_cost` <br>
+<u>**Kosten pro LKW: **</u>`r random_cost/nrow(data_trucks_test)` <br>
+
+Im Vergleich ergibt sich folgendes Güte unseres Modells: <br>
+
+<u>**Kosteneffizienz: **</u> Verbesserung um $\approx$ `r floor(((random_cost / min_cost_cv10_2.5k) * 100) - 100)`%
+
+### **Das wird schon**
+Eine weiter Möglichkeit wäre, auf sein Glück zu vertrauen und keinen LKW in die Werkstatt zu schicken, "das wird schon". Auch wenn das sehr riskant ist, sind, wie bereits in der Datensatzanalyse gezeigt, nur wenige der LKW's üerhaupt betroffen. <br>
+
+<center>
+```{r complete_luck}
+luck_class <- rep("neg", 16000)
+
+luck_conf <- confusionMatrix(luck_class, data_trucks_test$class)
+luck_conf
+
+luck_table <- luck_conf$table %>% as.data.frame() %>% extract2("Freq")
+luck_cost <- luck_table[2] * 10 + luck_table[3] * 500
+```
+</center>
+
+<br><br>
+
+<u><i>**Kosten: **</i></u>`r luck_cost` <br> 
+<u><i>**Kosten pro LKW: **</i></u>`r luck_cost/nrow(data_trucks_test)`<br> 
+
+Im Vergleich ergibt sich folgendes Güte unseres Modells: <br>
+
+<u>**Kosteneffizienz: **</u> Verbesserung um $\approx$ `r floor(((luck_cost / min_cost_cv10_2.5k) * 100) - 100)`%
+
+### **Sicher ist sicher**
+Eine letzte Möglichkeit liefert die "Sicherheitsvariante". Wenn man jeden LKW in die Werkstatt schickt, kann zumindest kein Fehler übersehen werden, aber auch das bringt natürlich gewisse Kosten mit sich. <br>
+
+<center>
+```{r safe}
+safe_class <- rep("pos", 16000)
+
+safe_conf <- confusionMatrix(safe_class, data_trucks_test$class)
+safe_conf
+safe_table <- safe_conf$table %>% as.data.frame() %>% extract2("Freq")
+safe_cost <- safe_table[2] * 10 + safe_table[3] * 500
+```
+</center>
+
+<br><br>
+
+<u><i>**Kosten: **</i></u>`r safe_cost` <br> 
+<u><i>**Kosten pro LKW: **</i></u>`r safe_cost/nrow(data_trucks_test)`<br> 
+
+Im Vergleich ergibt sich folgendes Güte unseres Modells: <br>
+
+<u>**Kosteneffizienz: **</u> Verbesserung um $\approx$ `r floor(((safe_cost / min_cost_cv10_2.5k) * 100) - 100)`%
+
+Row {data-height=100}
+-------------------------------------------------------
+
+### **Fazit**
+Natürlich gäbe es noch mehr Möglichkeiten, in dem man beispielsweise eine Stichprobe der Größe *n* in die Werkstatt schickt und den Rest so fahren lässt, es zeigt sich aber doch sehr deutlich, wie kostenintensiv solche Problematiken ohne Datenanalytik werden können. <br><br>
+Vertraut Scania auf die getroffenen Vorhersagen, so entstehen durchschnittlich 0.57 Kosten pro LKW, schickt die Firma zufällig LKW's in die Werkstatt, entstehen schnell Kosten von über 10 pro LKW. <br><br>
+Die Kostenminimierung ist also ein essenzieller Bestandteil moderner Unternehmen und aus dem Handwerkskasten der Statistiker und Analytiker nicht mehr wegzudenken.
+
 Über Uns {data-orientation=rows}
 =======================================================
 
@@ -1015,6 +1104,8 @@ For further information, contact us on:
 <br><br><br><br><br><br><br><br><br>
 
 <center><img src = "eoda_logo.png" alt = "Logo" height = "35%" width = "35%"></center>
+
+
 
 
 
