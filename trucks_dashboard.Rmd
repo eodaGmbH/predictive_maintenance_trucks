@@ -999,7 +999,7 @@ kable(var_imp_df_cv10_2.5k[, 1:2] %>% head(5), "html") %>%
 
 <center>**$Laufzeit \approx 5 \space Stunden \space 57 \space Minuten$**</center>
 
-Vorhersagefaktoren
+Klassifizierung
 =======================================================
 
 Um die verursachten Kosten der Modelle ( Modellierungs-Tab ) ausrechnen zu können, muss nach der Vorhersage der Wahrscheinlichkeiten noch klassifiziert werden. Hierfür muss ein threshold gewählt werden, nachdem eine Observation entweder der fehlerhaften oder der fehlerfreien Klasse zugeordnet werden. <br>

@@ -6490,8 +6490,8 @@ perc_ag_2
 </div>
 </div>
 </div>
-<div id="vorhersagefaktoren" class="section level1">
-<h1>Vorhersagefaktoren</h1>
+<div id="klassifizierung" class="section level1">
+<h1>Klassifizierung</h1>
 <p>Um die verursachten Kosten der Modelle ( Modellierungs-Tab ) ausrechnen zu können, muss nach der Vorhersage der Wahrscheinlichkeiten noch klassifiziert werden. Hierfür muss ein threshold gewählt werden, nachdem eine Observation entweder der fehlerhaften oder der fehlerfreien Klasse zugeordnet werden. <br> Dies geschieht in 3 Schritten: <br> 1.) Berechne die Kosten für die thresholds im Intervall <span class="math inline">\([0,1]\)</span> mit Schrittweite <span class="math inline">\(\frac{1}{100}\)</span> <br> Wiederhole: <br> 2.) Plotte die Kostenfunktion und ermittle einen Bereich, in dem das Minimum vorliegt <br> 3.) Wähle das Intervall <span class="math inline">\([a,b]\)</span> in dem das Minimum vorliegt, um dieses genauer zu bestimmen</p>
 <div id="column-7" class="section level2">
 <h2>Column</h2>
@@ -6555,30 +6555,30 @@ perc_ag_2
 
           Reference
 Prediction  neg  pos
-       neg 7734  181
-       pos 7891  194
+       neg 7794  195
+       pos 7831  180
                                              
-               Accuracy : 0.4955             
-                 95% CI : (0.4877, 0.5033)   
+               Accuracy : 0.4984             
+                 95% CI : (0.4906, 0.5062)   
     No Information Rate : 0.9766             
     P-Value [Acc &gt; NIR] : 1                  
                                              
-                  Kappa : 0.0011             
+                  Kappa : -0.0019            
  Mcnemar's Test P-Value : &lt;0.0000000000000002
                                              
-            Sensitivity : 0.4950             
-            Specificity : 0.5173             
-         Pos Pred Value : 0.9771             
-         Neg Pred Value : 0.0240             
-             Prevalence : 0.9766             
-         Detection Rate : 0.4834             
-   Detection Prevalence : 0.4947             
-      Balanced Accuracy : 0.5062             
+            Sensitivity : 0.49882            
+            Specificity : 0.48000            
+         Pos Pred Value : 0.97559            
+         Neg Pred Value : 0.02247            
+             Prevalence : 0.97656            
+         Detection Rate : 0.48712            
+   Detection Prevalence : 0.49931            
+      Balanced Accuracy : 0.48941            
                                              
        'Positive' Class : neg                
                                              </code></pre>
 <p><br></p>
-<p><u><i><strong>Kosten: </strong></i></u>169410 <br> <u><i><strong>Kosten pro LKW: </strong></i></u>10.588125 <br></p>
+<p><u><i><strong>Kosten: </strong></i></u>175810 <br> <u><i><strong>Kosten pro LKW: </strong></i></u>10.988125 <br></p>
 </center>
 </div>
 <div id="das-wird-schon" class="section level3">

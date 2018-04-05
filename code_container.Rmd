@@ -1053,6 +1053,12 @@ Im Vergleich ergibt sich folgendes Güte unseres Modells: <br>
 
 
 
-
+Zur Lösung des **Klassifizierungsproblems** wird ein **Random-Forest-Modell** verwendet. Als **Parameterraster** werden folgende Werte benutzt:
+<div class = "bordered">
+<center>$mtry = \sqrt{171} \approx 13$</center> <br>
+*Als **mtry** verwenden die Modelle den Standardwert aus $\sqrt{Anzahl \space der \space Feature}$.* <br><br>
+<center>$splitrule = gini$</center> <br>
+*Als **splitrule** verwenden die Modelle den **Gini-Index** für Klassifikationsprobleme.*
+</div> 
 
 
