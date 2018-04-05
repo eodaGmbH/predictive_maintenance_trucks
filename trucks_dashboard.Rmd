@@ -9,6 +9,8 @@ output:
 ---
 
 ```{r setup, eval = FALSE}
+# execute this once after opening the project!
+
 # library setup
 library(flexdashboard)
 library(magrittr)
@@ -27,11 +29,14 @@ library(rmarkdown)
 knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(warning = FALSE)
 options(scipen = 100)
+```
 
+```{r read_data, eval = FALSE}
 # read csv data
 data_trucks_training <- read.csv("aps_failure_training_set.csv", sep = ",", skip = 20, na.strings = "na")
 data_trucks_test <- read.csv("aps_failure_test_set.csv", sep = ",", skip = 20, na.strings = "na")
 ```
+
 
 Problematik
 =======================================================================
@@ -43,8 +48,7 @@ Column {data-width=1}
 Der Scania-Trucks Datensatz kommt mit 171 anonymisierten Featuren sowie 76000 Observationen, welche im Verhältnis 60.000 zu 16.000 in Trainings- bzw. Testdaten aufgeteilt sind. Jede Observation enthält die Information, ob ein Fehler im Luftdruckssystem ( im Folgenden **LDS** genannt ) vorliegt oder nicht. <br><br>
 Die Problemstellung lautet: <br>
 <div class = "bordered">
-*Sage für jede Observation im Testdatensatz voraus, ob ein Fehler im LDS vorliegt oder nicht. Minimiere dabei folgende Kostenfunktion:*
-<br>
+*Sage für jede Observation im Testdatensatz voraus, ob ein Fehler im LDS vorliegt oder nicht. Minimiere dabei folgende Kostenfunktion:* <br>
 **$cost(FP, FN) = 10 \cdot FP + 500 \cdot FN$** <br>
 *Es handelt sich hierbei also um ein **Klassifizierungsproblem**, mit der Kostenfunktion $cost(FP, FN)$ als Metrik.* <br>
 </div> <br>
@@ -53,20 +57,20 @@ Der Fehler 1. Art, hier **F**alse **P**ositive, bedeutet, dass man einer Observa
 **<u>Fehler 2. Art (FN):</u>** <br>
 Der Fehler 2. Art, hier **F**alse **N**egative, bedeutet, dass man eine Observation als fehlerfrei einstuft, obwohl das Fahrezeug einen Fehler im LDS aufweist. <br><br>
 <div class = "bordered">
-*Der Fehler 1. Art ist logischerweise deutlich kostengünstiger gewichtet als der Fehler 2. Art. Es ist wesentlich günstiger einen LKW fälschlicherweise in die Werkstatt zur Überprüfung zu schicken, als dass ein LKW, bedingt durch einen **LDS-Fehler**, auf der Strecke liegen bleibt.*
+*Der Fehler 1. Art ist deutlich kostengünstiger gewichtet als der Fehler 2. Art. Es ist wesentlich günstiger einen LKW fälschlicherweise in die Werkstatt zur Überprüfung zu schicken, als dass ein LKW, bedingt durch einen **LDS-Fehler**, auf der Strecke liegen bleibt.*
 </div> <br><br>
 
 ### **Hintergrund** {data-height=300}
 Das Scania-Trucks Problem wurde auf der **IDA 2016** vorgestellt. Die IDA ist ein internationales Symposium über intelligente Datenanalyse, welche 2016 im Kontext des **maschinellen Lernens** das Industrieproblem für die Öffentlichkeit zugänglich gemacht hat. Scania, Mitsponsor der IDA, hat auf die beiden kostengünstigstens Modelle einen Preis von 500$ aussgeschrieben, sowie einen Rednerspot auf der **IDA** selbst. <br><br>
 
-<div> <img src = "Scania.png" alt = "Scania Logo" height = "100%" " width = "100%"></div>
+<div><img src = "Scania.png" alt = "Scania Logo" height = "100%" "width = "100%"></div>
 
 Column {data-width=3}
 ----------------------------------------------------------------------
 
 ###
 <center>
-<div style = "display: inline-block; height: 90vh; "> <img src = "Titelbild.png" alt = "Titel" height = "100%"  width = "100%"></div>
+<div style = "display: inline-block; height: 90vh;"> <img src = "Titelbild.png" alt = "Titel" height = "100%"  width = "100%"></div>
 </center>
 
 Datensatz {data-orientation=rows}
@@ -75,9 +79,9 @@ Datensatz {data-orientation=rows}
 Row {data-height=200}
 -----------------------------------------------
 
-### **Histogramm-Feature**
-Aus der Beschreibung des Scania-Trucks Problems lässt sich herauslesen, dass gewisse Feature Histogrammdaten abbilden. 
-Das heißt, dass ein Feature auf mehrere Container aufgeteilt ist, wobei der Wert im Container $A_i$ die Aufenthaltsdauer in der Klasse $i$ bedeutet und $A$ das obergeordnete Feature ist. <br>
+### **Klassenfeature**
+Aus der Beschreibung des Scania-Trucks Problems lässt sich herauslesen, dass gewisse Feature Klassendaten abbilden. 
+Das heißt, dass ein Feature auf mehrere Klasse aufgeteilt ist, wobei der Wert in der Klasse $A_i$ die Aufenthaltsdauer in der Klasse $A_i$ bedeutet, wobei $A$ das obergeordnete Feature ist. <br>
 Beispielverteilung der Feature **ag** & **ay**:
 
 <div style = "display: inline;">
@@ -85,7 +89,7 @@ Beispielverteilung der Feature **ag** & **ay**:
 <div style = "display: inline-block; width: 48%;"> 
 ```{r table_hist_ag}
 # Example-table for the histogramm-feature
-kable(data_trucks_training[1:5, str_detect(colnames(data_trucks_training), "ag_00+") == TRUE], "html", caption = "Histogrammdaten ag") %>%
+kable(data_trucks_training[1:5, str_detect(colnames(data_trucks_training), "ag_00+") == TRUE], "html", caption = "Klassendaten Feature ag") %>%
   kable_styling("striped")
 ```
 </div>
@@ -93,7 +97,7 @@ kable(data_trucks_training[1:5, str_detect(colnames(data_trucks_training), "ag_0
 <div style = "display: inline-block; width: 48%; margin-left: 15px;"> 
 ```{r table_hist_ay}
 # Example-table for the histogramm-feature
-kable(data_trucks_training[1:5, str_detect(colnames(data_trucks_training), "ay_00+") == TRUE], "html", caption = "Histogrammdaten ay") %>%
+kable(data_trucks_training[1:5, str_detect(colnames(data_trucks_training), "ay_00+") == TRUE], "html", caption = "Klassendaten Feature ay") %>%
   kable_styling("striped")
 ```
 </div>
@@ -105,7 +109,7 @@ Row {data-height=300 .tabset .tabset-fade}
 
 ### Feature **ag**
 
-```{r mean_hist_ag}
+```{r mean_hist_ag, eval = FALSE}
 # calculate mean distribution for the ag feature
 ag_labels <- paste0("ag_00", 0:9)
 ag_mean <- sapply(data_trucks_training[, str_detect(colnames(data_trucks_training), "ag_00+") == TRUE], function(x) mean(x, na.rm = TRUE)) %>% as.numeric()
@@ -113,9 +117,9 @@ ag_mean_df <- data.frame(labels = ag_labels, mean = ag_mean)
 ```
 
 
-<div style = "display: inline-block; width: 90vw;">
+<div style = "display: inline-block; width: 96vw;">
 
-<div style = "float: left; margin-top: 20px;">
+<div style = "float: left; width: 48%; margin-top: 20px;">
 ```{r plot_ag, out.width = "95%", fig.height = 3}
 # plot ag distribution
 ggplot(ag_mean_df, aes(x = labels, y = mean)) +
@@ -126,7 +130,7 @@ ggplot(ag_mean_df, aes(x = labels, y = mean)) +
 ```
 </div>
 
-<div style = "display: inline-block; float: left; width: 49%; margin-top: 70px;">
+<div style = "display: inline-block; float: left; width: 48%; margin-top: 5vh; margin-left: 20px;">
 ```{r table_ag, out.width = "95%"}
 ag_summary <- c()
 sub_data_trucks <- data_trucks[which(colnames(data_trucks) == "ag_000"):which(colnames(data_trucks) == "ag_009")]
@@ -140,9 +144,10 @@ kable(ag_summary %>% as.data.frame(row.names = TRUE) %>% mutate_at(-1, funs(as.c
 </div>
 
 </div>
+
 ### Feature **ay**
 
-```{r mean_hist_ay}
+```{r mean_hist_ay, eval = FALSE}
 # calculate mean distribution for the ay feature
 ay_labels <- paste0("ay_00", 0:9)
 ay_mean <- sapply(data_trucks_training[, str_detect(colnames(data_trucks_training), "ay_00+") == TRUE], function(x) mean(x, na.rm = TRUE)) %>% as.numeric()
@@ -150,9 +155,9 @@ ay_mean_df <- data.frame(labels = ay_labels, mean = ay_mean)
 ```
 
 
-<div style = "display: inline-block; width: 100%;">
+<div style = "display: inline-block; width: 96vw;">
 
-<div style = "float: left; margin-top: 20px;">
+<div style = "float: left; width: 48%; margin-top: 20px;">
 ```{r plot_ay, out.width = "95%", fig.height = 3}
 # plot ay distribution
 ggplot(ay_mean_df, aes(x = labels, y = mean)) +
@@ -163,7 +168,7 @@ ggplot(ay_mean_df, aes(x = labels, y = mean)) +
 ```
 </div>
 
-<div style = "display: inline-block; float: left; width: 49%; margin-top: 70px;">
+<div style = "display: inline-block; float: left; width: 48%; margin-top: 5vh; margin-left: 20px;">
 ```{r table_ay, out.width = "95%"}
 ay_summary <- c()
 sub_data_trucks <- data_trucks[which(colnames(data_trucks) == "ay_000"):which(colnames(data_trucks) == "ay_009")]
@@ -180,7 +185,7 @@ kable(ay_summary %>% as.data.frame(row.names = TRUE) %>% mutate_at(-1, funs(as.c
 
 ### Feature **az**
 
-```{r mean_hist_az}
+```{r mean_hist_az, eval = FALSE}
 # calculate mean distribution for the az feature
 az_labels <- paste0("az_00", 0:9)
 az_mean <- sapply(data_trucks_training[, str_detect(colnames(data_trucks_training), "az_00+") == TRUE], function(x) mean(x, na.rm = TRUE)) %>% as.numeric()
@@ -188,9 +193,9 @@ az_mean_df <- data.frame(labels = az_labels, mean = az_mean)
 ```
 
 
-<div style = "display: inline-block; width: 100%;">
+<div style = "display: inline-block; width: 96vw;">
 
-<div style = "float: left; margin-top: 20px;">
+<div style = "float: left; width: 48%; margin-top: 20px;">
 ```{r plot_az, out.width = "95%", fig.height = 3}
 # plot az distribution
 ggplot(az_mean_df, aes(x = labels, y = mean)) +
@@ -201,7 +206,7 @@ ggplot(az_mean_df, aes(x = labels, y = mean)) +
 ```
 </div>
 
-<div style = "display: inline-block; float: left; width: 49%; margin-top: 70px;">
+<div style = "display: inline-block; float: left; width: 48%; margin-top: 5vh; margin-left: 20px;">
 ```{r table_az, out.width = "95%"}
 az_summary <- c()
 sub_data_trucks <- data_trucks[which(colnames(data_trucks) == "az_000"):which(colnames(data_trucks) == "az_009")]
@@ -218,7 +223,7 @@ kable(az_summary %>% as.data.frame(row.names = TRUE) %>% mutate_at(-1, funs(as.c
 
 ### Feature **ba**
 
-```{r mean_hist_ba}
+```{r mean_hist_ba, eval = FALSE}
 # calculate mean distribution for the ba feature
 ba_labels <- paste0("ba_00", 0:9)
 ba_mean <- sapply(data_trucks_training[, str_detect(colnames(data_trucks_training), "ba_00+") == TRUE], function(x) mean(x, na.rm = TRUE)) %>% as.numeric()
@@ -226,9 +231,9 @@ ba_mean_df <- data.frame(labels = ba_labels, mean = ba_mean)
 ```
 
 
-<div style = "display: inline-block; width: 100%;">
+<div style = "display: inline-block; width: 96vw;">
 
-<div style = "float: left; margin-top: 20px;">
+<div style = "float: left; width: 48%; margin-top: 20px;">
 ```{r plot_ba, out.width = "95%", fig.height = 3}
 # plot ba distribution
 ggplot(ba_mean_df, aes(x = labels, y = mean)) +
@@ -239,7 +244,7 @@ ggplot(ba_mean_df, aes(x = labels, y = mean)) +
 ```
 </div>
 
-<div style = "display: inline-block; float: left; width: 49%; margin-top: 70px;">
+<div style = "display: inline-block; float: left; width: 48%; margin-top: 5vh; margin-left: 20px;">
 ```{r table_ba, out.width = "95%"}
 ba_summary <- c()
 sub_data_trucks <- data_trucks[which(colnames(data_trucks) == "ba_000"):which(colnames(data_trucks) == "ba_009")]
@@ -256,7 +261,7 @@ kable(ba_summary %>% as.data.frame(row.names = TRUE) %>% mutate_at(-1, funs(as.c
 
 ### Feature **cn**
 
-```{r mean_hist_cn}
+```{r mean_hist_cn, eval = FALSE}
 # calculate mean distribution for the cn feature
 cn_labels <- paste0("cn_00", 0:9)
 cn_mean <- sapply(data_trucks_training[, str_detect(colnames(data_trucks_training), "cn_00+") == TRUE], function(x) mean(x, na.rm = TRUE)) %>% as.numeric()
@@ -264,9 +269,9 @@ cn_mean_df <- data.frame(labels = cn_labels, mean = cn_mean)
 ```
 
 
-<div style = "display: inline-block; width: 100%;">
+<div style = "display: inline-block; width: 96vw;">
 
-<div style = "float: left; margin-top: 20px;">
+<div style = "float: left; width: 48%; margin-top: 20px;">
 ```{r plot_cn, out.width = "95%", fig.height = 3}
 # plot cn distribution
 ggplot(cn_mean_df, aes(x = labels, y = mean)) +
@@ -277,7 +282,7 @@ ggplot(cn_mean_df, aes(x = labels, y = mean)) +
 ```
 </div>
 
-<div style = "display: inline-block; float: left; width: 49%; margin-top: 70px;">
+<div style = "display: inline-block; float: left; width: 48%; margin-top: 5vh; margin-left: 20px;">
 ```{r table_cn, out.width = "95%"}
 cn_summary <- c()
 sub_data_trucks <- data_trucks[which(colnames(data_trucks) == "cn_000"):which(colnames(data_trucks) == "cn_009")]
@@ -294,7 +299,7 @@ kable(cn_summary %>% as.data.frame(row.names = TRUE) %>% mutate_at(-1, funs(as.c
 
 ### Feature **cs**
 
-```{r mean_hist_cs}
+```{r mean_hist_cs, eval = FALSE}
 # calculate mean distribution for the cs feature
 cs_labels <- paste0("cs_00", 0:9)
 cs_mean <- sapply(data_trucks_training[, str_detect(colnames(data_trucks_training), "cs_00+") == TRUE], function(x) mean(x, na.rm = TRUE)) %>% as.numeric()
@@ -302,9 +307,9 @@ cs_mean_df <- data.frame(labels = cs_labels, mean = cs_mean)
 ```
 
 
-<div style = "display: inline-block; width: 100%;">
+<div style = "display: inline-block; width: 96vw;">
 
-<div style = "float: left; margin-top: 20px;">
+<div style = "float: left; width: 48%; margin-top: 20px;">
 ```{r plot_cs, out.width = "95%", fig.height = 3}
 # plot cs distribution
 ggplot(cs_mean_df, aes(x = labels, y = mean)) +
@@ -315,7 +320,7 @@ ggplot(cs_mean_df, aes(x = labels, y = mean)) +
 ```
 </div>
 
-<div style = "display: inline-block; float: left; width: 49%; margin-top: 70px;">
+<div style = "display: inline-block; float: left; width: 48%; margin-top: 5vh; margin-left: 20px;">
 ```{r table_cs, out.width = "95%"}
 cs_summary <- c()
 sub_data_trucks <- data_trucks[which(colnames(data_trucks) == "cs_000"):which(colnames(data_trucks) == "cs_009")]
@@ -332,16 +337,18 @@ kable(cs_summary %>% as.data.frame(row.names = TRUE) %>% mutate_at(-1, funs(as.c
 
 ### Feature **ee**
 
-```{r mean_hist_ee}
+```{r mean_hist_ee, eval = FALSE}
 # calculate mean distribution for the ee feature
 ee_labels <- paste0("ee_00", 0:9)
 ee_mean <- sapply(data_trucks_training[, str_detect(colnames(data_trucks_training), "ee_00+") == TRUE], function(x) mean(x, na.rm = TRUE)) %>% as.numeric()
 ee_mean_df <- data.frame(labels = ee_labels, mean = ee_mean)
 ```
 
-<div style = "display: inline-block; width: 100%;">
 
-<div style = "float: left; margin-top: 20px;">
+
+<div style = "display: inline-block; width: 96vw;">
+
+<div style = "float: left; width: 48%; margin-top: 20px;">
 ```{r plot_ee, out.width = "95%", fig.height = 3}
 # plot ee distribution
 ggplot(ee_mean_df, aes(x = labels, y = mean)) +
@@ -352,7 +359,7 @@ ggplot(ee_mean_df, aes(x = labels, y = mean)) +
 ```
 </div>
 
-<div style = "display: inline-block; float: left; width: 49%; margin-top: 70px;">
+<div style = "display: inline-block; float: left; width: 48%; margin-top: 5vh; margin-left: 20px;">
 ```{r table_ee, out.width = "95%"}
 ee_summary <- c()
 sub_data_trucks <- data_trucks[which(colnames(data_trucks) == "ee_000"):which(colnames(data_trucks) == "ee_009")]
@@ -375,9 +382,10 @@ Column {data-width=100}
 
 ### **NA-Analyse**
 
-Der Scania-Trucks Datensatz weist eine hohe Zahl an fehlenden Werten ( hier im Folgenden **NA's** genannt) auf. Dies kann insbesondere beim modellieren zu Problemen führen, da fehlende Werte für den **Klassifizierungsalgorithmus** unmöglich zu behandeln sind. <br>
-Eine Möglichkeit besteht darin, eine gewisse Anzahl an NA's zuzulassen und dementsprechend die Anzahl der Feature zu reduzieren. Alle Observationen, welche nach der **Featurereduktion** noch NA's enthalten, werden entfernt. <br>
-Folgende Tabelle liefert einen Überblick über die **NA Grenzen**: 
+Der Scania-Trucks Datensatz weist eine hohe Zahl an fehlenden Werten ( hier im Folgenden **NA's** genannt) auf. <br>
+Eine Möglichkeit besteht darin, eine gewisse Anzahl an NA's zuzulassen und dementsprechend die Anzahl der Feature zu reduzieren. Alle Observationen, welche nach der **Featurereduktion** noch NA's enthalten, werden entfernt. Unterschieden wird zwischen allen Observationen ( fehlerfrei & fehlerhaft ), und den fehlerhaften Observationen ( Observationen die einen Fehler aufweisen ). <br>
+Die Anzahl der vorhandenen NA's in jedem der 171 Feature liefert uns die verschiedenen **NA-Grenzen**. <br>
+Folgende Auszug aus der Tabelle liefert einen Überblick über die NA Grenzen: 
 
 ```{r NA_data_frame, eval = FALSE}
 # setup the whole dataset
@@ -422,7 +430,7 @@ result_NA <- result_NA %>%
 
 ```{r NA_table}
 # print table for the na boundaries
-kable(result_NA %>% head(5), "html", caption = "NA Grenzen, Featureanzahl ( Grün ), allgemeiner Obsservationsverlust ( Orange ) & fehlerhafter Observationsverlust ( Blau )") %>%
+kable(result_NA %>% head(5), "html", caption = "NA Grenzen, Featureanzahl ( Grün ), allgemeiner Observationsverlust ( Orange ) & fehlerhafter Observationsverlust ( Blau )") %>%
   kable_styling("striped") %>%
   column_spec(c(2,5), background = "#88ab33", color = "white") %>%
   column_spec(c(3,6), background = "#F98948", color = "white") %>%
@@ -443,26 +451,25 @@ ggplot(result_NA) +
 ```
 </center>
 
-
 <br>
 
 <div class = "bordered">
 <center>**Featuregewinnung:**</center> <br>
-Aus der Tabelle lässt sich erkennen, dass bei den unterschiedlichen NA-Grenzen die Anzahl an **gewonnener Feature** stark schwankt. So gewinnt man beim Sprung von 0 auf 195 NA's lediglich 1 Feature dazu, beim Sprung von 861 auf 863 Feature aber direkt 30 Feature. Das **NA-Verhalten** ist also alles andere als proportional. <br>
+Aus der Tabelle lässt sich erkennen, dass bei den unterschiedlichen NA-Grenzen die Anzahl an **gewonnener Feature** stark schwankt. So gewinnt man beim Sprung von 0 auf 195 NA's lediglich 1 Feature dazu, beim Sprung von 861 auf 863 NA's aber direkt 30 Feature. Das **NA-Verhalten** ist also alles andere als proportional. <br>
 Die Entscheidung, welche NA-Grenze man als Auschlussverfahren nimmt, hängt aber nicht nur von der Featuregewinnung ab.
 </div> <br>
 <div class = "bordered">
 <center>**Allgemeiner Observationsverlust:**</center> <br>
 Alle Feature im späteren Modell zu berücksichten würde nichts bringen, wenn man nur noch auf 5% der ursprünglichen Daten trainieren kann. Deshalb spielt der **Observationsverlust** eine starke Rolle in der Entscheidung. Hier zeichnet sich ein starker Sprung von 5598 auf 12012 NA's ab. Evaluiert man also die Grenzen anhand des Observationsverlustes, sollte man nicht über die Grenze von 5598 hinaus gehen, da direkt danach c.a. 10% der LKW's zusätzlich verloren gehen. 
 </div> <br>
-Normalerweise wären dass bereits ausreichend Informationen, um eine fundierte Meinung über die Wahl der NA-Grenze zu treffen. Der Scania-Trucks Datensatz weist allerdings ein noch größeres Problem auf. Von den 76000 Observationen sind lediglich **1375** fehlerhaft. Dadurch könnte es passieren, dass wir bei der Wahl der NA-Grenze alle fehlerhaften Observationen verlieren. <br>
+Der Scania-Trucks Datensatz weist noch ein Problem zusätzlich auf. Von den 76000 Observationen sind lediglich **1375** fehlerhaft. Dadurch könnte es passieren, dass wir bei der Wahl der NA-Grenze alle fehlerhaften Observationen verlieren. <br>
 Demnach muss zusätzlich folgende Variable mit einkalkuliert werden: <br><br>
 <div class = "bordered">
 <center>**Fehlerhafter Observationsverlust:**</center> <br>
 Der fehlerhafte Oberservationsverlust beschreibt die Anzahl der Observationen die bei der Wahl der NA-Grenze verloren gehen und zusätzlich einen Fehler im LDS aufweisen. Anhand der geringen Fehlerrate im Datensatz wäre es fatal, zu viele der fehlerhaften Fahrzeuge zu verlieren, da ein Modell so möglicherweise auf ausschließlich fehlerfreien Daten trainieren könnte. Die Grenze für fehlerhafte Observationen findet sich in der Tabelle offensichtlich beim Sprung von 928 NA's auf 3188 NA's. Obwohl man hier nur 1 Feature dazu gewinnen würde, fallen 30% der fehlerhaften Observationen dadurch raus. Die Grenze ist demnach also bei 928 NA's zu setzen.
-</div> </br>
+</div> <br>
 <center>**<u>Fazit:</u>**</center>
-Die NA-Analyse zeigt, dass verschiedene Breakpoints existieren, um eine gewisse Anzahl von Featuren zu erhalten / nicht zu viele Observationen zu verlieren. Um auf dem kompletten Trainingsset vorhersagen treffen zu können, müssen die fehlenden Werte aber aufgefüllt werden, anstatt **NA-Reduktion** zu betreiben. Hierzu stehen Möglichkeiten wie beispielsweise die **knn-imputation** zur Verfügung. Im Folgenden wird diese Möglichkeiten evaluiert.
+Die NA-Analyse zeigt, dass verschiedene Breakpoints existieren, um eine gewisse Anzahl von Featuren zu erhalten / nicht zu viele Observationen zu verlieren. Als ein erster Gedankengang ist diese Art der Analyse nicht schlecht und verschafft einen guten Überblick über den Datensatz, der individuelle Informationsgehalt der einzelnen Feature wird dabei aber nicht berücksichtigt. Um außerdem auf dem kompletten Trainingsset vorhersagen treffen zu können, müssen die fehlenden Werte aufgefüllt werden, anstatt **NA-Reduktion** zu betreiben. Hierzu stehen Möglichkeiten wie beispielsweise die **knn-imputation** zur Verfügung. Im Pre-Processing-Tab wird diese Möglichkeit evaluiert.
 
 
 
@@ -473,9 +480,9 @@ Column {data-width=100}
 ### **Datenaufbereitung ( Relativierung )**
 
 
-Die **Datensatzanalyse** hat gezeigt, dass viele der Histogrammdaten nicht gleichmäßig ( normal- ) verteilt sind.
-Oftmals sind Container eines Histogrammfeatures für fast alle Observationen 0, andere Containere hingegen sind mit den unterschiedlichsten Größenordnungen von Zahlen gefüllt. <br>
-Hinzu kommt, dass die Werte in den verschiedenen Containern **absolute** Daten sind, das heißt: <br><br>
+Die **Datensatzanalyse** hat gezeigt, dass viele der Klassendaten nicht gleichmäßig verteilt sind.
+Oftmals sind die Klassen eines Klassenfeatures für fast alle Observationen 0, andere Klassen hingegen sind mit den unterschiedlichsten Größenordnungen von Zahlen gefüllt. <br>
+Hinzu kommt, dass die Werte in den verschiedenen Klassen **absolute** Daten sind: <br><br>
 <center>
 <div class = "bordered" style = "width: 30vw; font-size: 20px;">
 **$\sum_{i = 0}^{9}{A_i}$** <br><br>
@@ -485,7 +492,7 @@ ist **nicht notwendigerweise gleich** für alle Observationen.
 
 <br>
 
-Um das Problem der absoluten Histogrammdaten zu beseitigen ist es sinnvoll diese zu **relativieren**. Man stellt also jeden absoluten Wert $i$ in **prozentuellen Bezug** zu der **Gesamtaufenthaltszeit** jeder Observation in der Klasse $A$. <br>
+Um das Problem der absoluten Klassendaten zu beseitigen ist es sinnvoll diese zu **relativieren**. Man stellt also jeden absoluten Wert in $A_i$ in **prozentuellen Bezug** zu der **Gesamtaufenthaltszeit** der Observation in der Klasse $A$. <br>
 Dadurch ergibt sich folgende Formel für die neuen Werte $\tilde{A}$: <br><br>
 <center>
 <div class = "bordered" style = "font-size: 20px; width: 30vw;">
@@ -499,7 +506,7 @@ für **jede** Observation.
 
 ```{r hist_ag_before_table}
 # example table of the histogramm feature  ag before qualifying the data
-kable(data_trucks_training[1:5, str_detect(colnames(data_trucks_training), "ag_00+") == TRUE], "html", caption = "Histogrammdaten") %>%
+kable(data_trucks_training[1:5, str_detect(colnames(data_trucks_training), "ag_00+") == TRUE], "html", caption = "Klassenfeature ag") %>%
   kable_styling("striped")
 ```
 
@@ -588,7 +595,7 @@ data_trucks_perc <- data_trucks_perc[, !str_detect(names(data_trucks_perc), "ag_
 
 ```{r hist_ag_after_table}
 # example table of the histogramm feature ag after qualifying the data
-kable(data_trucks_perc[1:5, str_detect(colnames(data_trucks_perc), "perc_ag_+") == TRUE], "html", caption = "Histogrammdaten") %>%
+kable(data_trucks_perc[1:5, str_detect(colnames(data_trucks_perc), "perc_ag_+") == TRUE], "html", caption = "Klassenfeature ag relativiert") %>%
   kable_styling("striped", position = "left" )
 ```
 
@@ -605,14 +612,15 @@ data_trucks_knn_training <- predict(data_trucks_knn, data_trucks_perc[1:60000, ]
 data_trucks_knn_test <- predict(data_trucks_knn, data_trucks_perc[60001:76000, ])
 ```
 
-Zusätzlich zu seinen Histogrammdaten verfügt der Datensatz über, wie bereits erwähnt, eine vielzahl von **NA's** ( fehlende Werte ).
-Diese würden bereits beim trainieren der Modelle für Probleme sorgen, da der **Algorithmus** mit diesen Daten nicht arbeiten kann ( keine Splits setzen, Regressionskoeffizienten berechnen, etc. ). <br>
-Eine Möglichkeit bietet hier die **knn-Imputation** ( *k-nächste-Nachbarn-Schätzung* ). <br><br>
+Zusätzlich zu seinen Klassendaten verfügt der Datensatz über, wie bereits erwähnt, eine vielzahl von **NA's** ( fehlende Werte ). <br>
+Eine Möglichkeit, diese aufzufüllen, bietet hier die **knn-Imputation** ( *k-nearest-neighbours-Schätzung* ). <br><br>
 Die Schätzung erfolgt in **3** Schritten. <br>
 <center>
 <font size = "13px"><font color = "#88ab33">Zentrieren</font>, <font color = "#F98948">Skalieren</font> & <font color = "#437F97">Schätzen</font></font>
 </center>
+
 <br>
+
 Folgende Tabellenausschnitte verdeutlicht diese Schritte: <br><br>
 
 <div style = "display: inline;">
@@ -693,16 +701,10 @@ Column {data-width=100}
 
 ### **Modellauswahl & Güte**
 
-Zur Lösung des **Klassifizierungsproblems** wird ein **Random-Forest-Modell** verwendet. Als **Parameterraster** werden folgende Werte benutzt:
-<div class = "bordered">
-<center>$mtry = \sqrt{171} \approx 13$</center> <br>
-*Als **mtry** verwenden die Modelle den Standardwert aus $\sqrt{Anzahl \space der \space Feature}$.* <br><br>
-<center>$splitrule = gini$</center> <br>
-*Als **splitrule** verwenden die Modelle den **Gini-Index** für Klassifikationsprobleme.*
-</div> 
+Zur Lösung des **Klassifizierungsproblems** wird ein **Random-Forest-Modell** verwendet. Als **Parameterraster** wird $mtry = 13$ und $splitrule =$ *gini-Index* verwendet. <br>
+Der Standardwert von $mtry = \sqrt{Anzahl \space der\space Feature}$ hat sich gegenüber verschiedenen Werten durchgesetzt. Der *gini-Index* wurde jeweils vom Modell als beste *splitrule* gewählt.
 
 <br><br>
-
 
 <center>**<u>Modell 1:</u> 10-fache, 5-faltige Kreuzvalidierung mit 500 Bäumen**</center> <br>
 
@@ -746,8 +748,6 @@ threshold_df_cv10_0.5k <- min_cost_func(seq(from = 0.93, to = 0.95, length.out =
 min_cost_place_cv10_0.5k <- which(threshold_df_cv10_0.5k$cost == min(threshold_df_cv10_0.5k$cost))[1]
 min_threshold_cv10_0.5k <- threshold_df_cv10_0.5k$threshold[min_cost_place_cv10_0.5k]
 min_cost_cv10_0.5k <- threshold_df_cv10_0.5k$cost[min_cost_place_cv10_0.5k]
-ggplot(threshold_df_cv10_0.5k, aes(x = threshold_df_cv10_0.5k$threshold, y = threshold_df_cv10_0.5k$cost)) +
-  geom_line()
 pred_cv10_0.5k_class <- ifelse(pred_cv10_0.5k$neg >= min_threshold_cv10_0.5k, "neg", "pos")
 ```
 
@@ -759,13 +759,14 @@ pred_cv10_0.5k_class <- ifelse(pred_cv10_0.5k$neg >= min_threshold_cv10_0.5k, "n
 confusionMatrix(pred_cv10_0.5k_class, data_trucks_knn_test$class)
 ```
 </div>
+
 <div style = "display: inline-block; vertical-align: text-top;">
 ```{r model_cv10_0.5k_display}
 # display model 2
 model_knn_cv10_0.5k
 ```
-<center>
 <br>
+<center>
 <u>***Ergebnis:***</u> <br><br>
 ***Kosten:** `r min_cost_cv10_0.5k`* <br><br>
 ***Kosten pro LKW:** `r min_cost_cv10_0.5k / nrow(data_trucks_knn_test)`*
@@ -818,8 +819,6 @@ threshold_df_cv10_1k <- min_cost_func(seq(from = 0.97, to = 0.98, length.out = 1
 min_cost_place_cv10_1k <- which(threshold_df_cv10_1k$cost == min(threshold_df_cv10_1k$cost))[1]
 min_threshold_cv10_1k <- threshold_df_cv10_1k$threshold[min_cost_place_cv10_1k]
 min_cost_cv10_1k <- threshold_df_cv10_1k$cost[min_cost_place_cv10_1k]
-ggplot(threshold_df_cv10_1k, aes(x = threshold_df_cv10_1k$threshold, y = threshold_df_cv10_1k$cost)) +
-  geom_line()
 pred_cv10_1k_class <- ifelse(pred_cv10_1k$neg >= min_threshold_cv10_1k, "neg", "pos")
 ```
 
@@ -831,6 +830,7 @@ pred_cv10_1k_class <- ifelse(pred_cv10_1k$neg >= min_threshold_cv10_1k, "neg", "
 confusionMatrix(pred_cv10_1k_class, data_trucks_knn_test$class)
 ```
 </div>
+
 <div style = "display: inline-block; vertical-align: text-top;">
 ```{r model_cv10_1k_display}
 # display model 3
@@ -902,6 +902,7 @@ ggplot(threshold_df_cv10_2.5k, aes(x = threshold_df_cv10_2.5k$threshold, y = thr
 confusionMatrix(pred_cv10_2.5k_class, data_trucks_knn_test$class)
 ```
 </div>
+
 <div style = "display: inline-block; vertical-align: text-top;">
 ```{r model_cv10_2.5k_display}
 # display model 4
@@ -920,18 +921,7 @@ model_knn_cv10_1k
 Column {data-width=100}
 ------------------------------
 
-### **Variablenwichtigkeit & Laufzeit**
-
-<center>**<u>Specs:</u>**</center>
-
-<center>
-*Intel(R) Core(TM) i5-6200U CPU @ 2.30GHz, 2400 MHz, 2 Kerne, 4 logische Prozessoren, 8GB RAM* <br>
-*Gerechnet wurde auf 3 Prozessoren*
-</center>
-
-<br>
-
-
+### **Variablenwichtigkeit**
 
 <center>**<u>Modell 1:</u>**</center> <br>
 
@@ -947,8 +937,6 @@ var_imp_df_cv10_0.5k <- data.frame(Variable = rownames(varImp(model_knn_cv10_0.5
 kable(var_imp_df_cv10_0.5k[, 1:2] %>% head(5), "html") %>%
   kable_styling("striped")
 ```
-
-<center>**$Laufzeit \approx 1 \space Stunde \space 11 \space Minuten$**</center>
 
 <br><br>
 
@@ -967,8 +955,6 @@ kable(var_imp_df_cv10_1k[, 1:2] %>% head(5), "html") %>%
   kable_styling("striped")
 ```
 
-<center>**$Laufzeit \approx 2 \space Stunden \space 21 \space Minuten$**</center>
-
 <br><br>
 
 <center>**<u>Modell 3:</u>**</center> <br>
@@ -986,7 +972,115 @@ kable(var_imp_df_cv10_2.5k[, 1:2] %>% head(5), "html") %>%
   kable_styling("striped")
 ```
 
+### **Laufzeit**
+
+<center>**<u>Specs:</u>**</center>
+
+<center>
+*Intel(R) Core(TM) i5-6200U CPU @ 2.30GHz, 2400 MHz, 2 Kerne, 4 logische Prozessoren, 8GB RAM* <br>
+*Gerechnet wurde auf 3 Prozessoren*
+</center>
+
+<br>
+
+<center>**<u>Modell 1:</u>**</center> <br>
+
+<center>**$Laufzeit \approx 1 \space Stunde \space 11 \space Minuten$**</center>
+
+<br>
+
+<center>**<u>Modell 2:</u>**</center> <br>
+
+<center>**$Laufzeit \approx 2 \space Stunden \space 21 \space Minuten$**</center>
+
+<br>
+
+<center>**<u>Modell 3:</u>**</center> <br>
+
 <center>**$Laufzeit \approx 5 \space Stunden \space 57 \space Minuten$**</center>
+
+Vorhersagefaktoren
+=======================================================
+
+Um die verursachten Kosten der Modelle ( Modellierungs-Tab ) ausrechnen zu können, muss nach der Vorhersage der Wahrscheinlichkeiten noch klassifiziert werden. Hierfür muss ein threshold gewählt werden, nachdem eine Observation entweder der fehlerhaften oder der fehlerfreien Klasse zugeordnet werden. <br>
+Dies geschieht in 3 Schritten: <br>
+1.) Berechne die Kosten für die thresholds im Intervall $[0,1]$ mit Schrittweite $\frac{1}{100}$ <br>
+Wiederhole: <br>
+2.) Plotte die Kostenfunktion und ermittle einen Bereich, in dem das Minimum vorliegt <br>
+3.) Wähle das Intervall $[a,b]$ in dem das Minimum vorliegt, um dieses genauer zu bestimmen
+
+
+Column
+-------------------------------------------------------
+
+### **Modell 1 ( 10-fache, 5-faltige Kreuzvalidierung mit 500 Bäumen )**
+
+```{r cv10_0.5k_plot}
+ggplot(threshold_df_cv10_0.5k, aes(x = threshold_df_cv10_0.5k$threshold, y = threshold_df_cv10_0.5k$cost)) +
+  geom_line() +
+  theme_minimal() +
+  xlab("threshold") + ylab("Kosten") +
+  ggtitle("", subtitle = "Finaler Plot im Intervall [0.93, 0.95]")
+```
+
+<center>
+
+<u>**Optimaler threshold:**</u> <br>
+*`r min_threshold_cv10_0.5k`*
+
+</center>
+
+<br>
+
+<i>Ist der Algorithmus sich zu $\approx$ `r (min_threshold_cv10_0.5k*100) %>% signif(digits = 4)`% sicher, dass eine Observation fehlerfrei ist, klassifiziere diese als fehlerfrei, andernfalls klassifiziere sie als fehlerhaft. </i>
+
+Column
+--------------------------------------------------------
+
+### **Modell 2 ( 10-fache, 5-faltige Kreuzvalidierung mit 1000 Bäumen )**
+
+```{r cv10_1k_plot}
+ggplot(threshold_df_cv10_1k, aes(x = threshold_df_cv10_1k$threshold, y = threshold_df_cv10_1k$cost)) +
+  geom_line() +
+  theme_minimal() +
+  xlab("threshold") + ylab("Kosten") +
+  ggtitle("", subtitle = "Finaler Plot im Intervall [0.97, 0.98]")
+```
+
+<center>
+
+<u>**Optimaler threshold:**</u> <br>
+*`r min_threshold_cv10_1k`*
+
+</center>
+
+<br>
+
+<i>Ist der Algorithmus sich zu $\approx$ `r (min_threshold_cv10_1k*100) %>% signif(digits = 4)`% sicher, dass eine Observation fehlerfrei ist, klassifiziere diese als fehlerfrei, andernfalls klassifiziere sie als fehlerhaft. </i>
+
+Column
+--------------------------------------------------------
+
+### **Modell 3 ( 10-fache, 5-faltige Kreuzvalidierung mit 2500 Bäumen )**
+
+```{r cv10_2.5k_plot}
+ggplot(threshold_df_cv10_2.5k, aes(x = threshold_df_cv10_2.5k$threshold, y = threshold_df_cv10_2.5k$cost)) +
+  geom_line() +
+  theme_minimal() +
+  xlab("threshold") + ylab("Kosten") +
+  ggtitle("", subtitle = "Finaler Plot im Intervall [0.95, 0.96]")
+```
+
+<center>
+
+<u>**Optimaler threshold:**</u> <br>
+*`r min_threshold_cv10_2.5k`*
+
+</center>
+
+<br>
+
+<i>Ist der Algorithmus sich zu $\approx$ `r (min_threshold_cv10_2.5k*100) %>% signif(digits = 4)`% sicher, dass eine Observation fehlerfrei ist, klassifiziere diese als fehlerfrei, andernfalls klassifiziere sie als fehlerhaft. </i>
 
 Kostenvergleich {data-orientation=rows}
 =======================================================
@@ -996,7 +1090,7 @@ Row  {data-height=300}
 ------------------------------------------------------
 
 ### **Guessing at Random**
-Eine Möglichkeit bietet sich darin, einfach zu raten. Sicherlich nicht besonders effektiv, aber vielleicht lassen sich so ein paar der betroffenen LKW's vorsorglich in die Werkstatt schicken. <br>
+Eine Möglichkeit bietet sich darin, einfach zu raten. Sicherlich nicht besonders effektiv, aber vielleicht lassen sich so ein paar der betroffenen LKW's vorsorglich in die Werkstatt schicken. <br><br>
 
 <center>
 ```{r guessing_at_random}
@@ -1010,19 +1104,16 @@ random_conf
 random_table <- random_conf$table %>% as.data.frame() %>% extract2("Freq") 
 random_cost <- random_table[2] * 10 + random_table[3] * 500
 ```
+
+<br>
+
+<u><i>**Kosten: **</i></u>`r random_cost` <br>
+<u><i>**Kosten pro LKW: **</i></u>`r random_cost/nrow(data_trucks_test)` <br>
+
 </center>
 
-<br><br>
-
-<u>**Kosten: **</u>`r random_cost` <br>
-<u>**Kosten pro LKW: **</u>`r random_cost/nrow(data_trucks_test)` <br>
-
-Im Vergleich ergibt sich folgendes Güte unseres Modells: <br>
-
-<u>**Kosteneffizienz: **</u> Verbesserung um $\approx$ `r floor(((random_cost / min_cost_cv10_2.5k) * 100) - 100)`%
-
 ### **Das wird schon**
-Eine weiter Möglichkeit wäre, auf sein Glück zu vertrauen und keinen LKW in die Werkstatt zu schicken, "das wird schon". Auch wenn das sehr riskant ist, sind, wie bereits in der Datensatzanalyse gezeigt, nur wenige der LKW's üerhaupt betroffen. <br>
+Eine weiter Möglichkeit wäre, auf sein Glück zu vertrauen und keinen LKW in die Werkstatt zu schicken, "das wird schon". Auch wenn das sehr riskant ist, sind, wie bereits in der Datensatzanalyse gezeigt, nur wenige der LKW's überhaupt betroffen. <br><br>
 
 <center>
 ```{r complete_luck}
@@ -1034,19 +1125,16 @@ luck_conf
 luck_table <- luck_conf$table %>% as.data.frame() %>% extract2("Freq")
 luck_cost <- luck_table[2] * 10 + luck_table[3] * 500
 ```
-</center>
 
-<br><br>
+<br>
 
 <u><i>**Kosten: **</i></u>`r luck_cost` <br> 
 <u><i>**Kosten pro LKW: **</i></u>`r luck_cost/nrow(data_trucks_test)`<br> 
 
-Im Vergleich ergibt sich folgendes Güte unseres Modells: <br>
-
-<u>**Kosteneffizienz: **</u> Verbesserung um $\approx$ `r floor(((luck_cost / min_cost_cv10_2.5k) * 100) - 100)`%
+</center>
 
 ### **Sicher ist sicher**
-Eine letzte Möglichkeit liefert die "Sicherheitsvariante". Wenn man jeden LKW in die Werkstatt schickt, kann zumindest kein Fehler übersehen werden, aber auch das bringt natürlich gewisse Kosten mit sich. <br>
+Eine letzte Möglichkeit liefert die "Sicherheitsvariante". Wenn man jeden LKW in die Werkstatt schickt, kann zumindest kein Fehler übersehen werden, aber auch das bringt natürlich gewisse Kosten mit sich. <br><br>
 
 <center>
 ```{r safe}
@@ -1057,24 +1145,21 @@ safe_conf
 safe_table <- safe_conf$table %>% as.data.frame() %>% extract2("Freq")
 safe_cost <- safe_table[2] * 10 + safe_table[3] * 500
 ```
-</center>
 
-<br><br>
+<br>
 
 <u><i>**Kosten: **</i></u>`r safe_cost` <br> 
 <u><i>**Kosten pro LKW: **</i></u>`r safe_cost/nrow(data_trucks_test)`<br> 
 
-Im Vergleich ergibt sich folgendes Güte unseres Modells: <br>
-
-<u>**Kosteneffizienz: **</u> Verbesserung um $\approx$ `r floor(((safe_cost / min_cost_cv10_2.5k) * 100) - 100)`%
+</center>
 
 Row {data-height=100}
 -------------------------------------------------------
 
 ### **Fazit**
 Natürlich gäbe es noch mehr Möglichkeiten, in dem man beispielsweise eine Stichprobe der Größe *n* in die Werkstatt schickt und den Rest so fahren lässt, es zeigt sich aber doch sehr deutlich, wie kostenintensiv solche Problematiken ohne Datenanalytik werden können. <br><br>
-Vertraut Scania auf die getroffenen Vorhersagen, so entstehen durchschnittlich 0.57 Kosten pro LKW, schickt die Firma zufällig LKW's in die Werkstatt, entstehen schnell Kosten von über 10 pro LKW. <br><br>
-Die Kostenminimierung ist also ein essenzieller Bestandteil moderner Unternehmen und aus dem Handwerkskasten der Statistiker und Analytiker nicht mehr wegzudenken.
+Vertraut Scania auf die getroffenen Vorhersagen, so entstehen Gesamtkosten von ca. 9170, schickt die Firma alle LKW's in die Werkstatt, entstehen schnell Kosten von über 156000. <br><br>
+Der Aspekt *Predictive Maintenance* zur Kostenminimierung ist also ein essenzieller Bestandteil moderner Unternehmen und aus dem Handwerkskasten der Statistiker und Analytiker nicht mehr wegzudenken.
 
 Über Uns {data-orientation=rows}
 =======================================================
@@ -1106,6 +1191,98 @@ For further information, contact us on:
 <center><img src = "eoda_logo.png" alt = "Logo" height = "35%" width = "35%"></center>
 
 
+```{r new_model, eval = FALSE}
+control_cv_five_ten <- trainControl(method = "repeatedcv",
+                                        number = 5,
+                                        repeats = 10,
+                                        allowParallel = TRUE,
+                                        classProbs = TRUE,
+                                        verboseIter = TRUE,
+                                        summaryFunction = mnLogLoss)
+cluster <- makeCluster(detectCores() - 1)
+registerDoParallel(cluster)
+
+grid_knn_mtry10 <- expand.grid(mtry = 10, splitrule = "gini", min.node.size = 1)
 
 
 
+system.time(
+  model_mtry10 <- train(class ~ .,
+                               data = data_trucks_knn_training,
+                               method = "ranger",
+                               metric = "logLoss",
+                               importance = "impurity",
+                               verbose = TRUE,
+                               trControl = control_cv_five_ten,
+                               tuneGrid = grid_knn_mtry10,
+                               num.trees = 1000)
+)
+
+grid_knn_mtry17 <- expand.grid(mtry = 17, splitrule = "gini", min.node.size = 1)
+
+
+
+system.time(
+  model_mtry17 <- train(class ~ .,
+                               data = data_trucks_knn_training,
+                               method = "ranger",
+                               metric = "logLoss",
+                               importance = "impurity",
+                               verbose = TRUE,
+                               trControl = control_cv_five_ten,
+                               tuneGrid = grid_knn_mtry17,
+                               num.trees = 1000)
+)
+
+grid_knn_mtry20 <- expand.grid(mtry = 20, splitrule = "gini", min.node.size = 1)
+
+
+
+system.time(
+  model_mtry20 <- train(class ~ .,
+                               data = data_trucks_knn_training,
+                               method = "ranger",
+                               metric = "logLoss",
+                               importance = "impurity",
+                               verbose = TRUE,
+                               trControl = control_cv_five_ten,
+                               tuneGrid = grid_knn_mtry20,
+                               num.trees = 1000)
+)
+
+stopCluster(cluster)
+registerDoSEQ()
+```
+
+```{r eval_mtry10, eval = FALSE}
+pred_mtry10 <- predict(model_mtry10, data_trucks_knn_test, type = "prob")
+
+threshold_mtry10 <- min_cost_func(seq(from = 0.95, to = 0.96, length.out = 100), pred_mtry10, data_trucks_knn_test)
+min_cost_place_mtry10 <- which(threshold_mtry10$cost == min(threshold_mtry10$cost))[1]
+min_threshold_mtry10 <- threshold_mtry10$threshold[min_cost_place_mtry10]
+min_cost_mtry10 <- threshold_mtry10$cost[min_cost_place_mtry10]
+ggplot(threshold_mtry10, aes(x = threshold_mtry10$threshold, y = threshold_mtry10$cost)) +
+  geom_line()
+```
+
+```{r eval_mtry17, eval = FALSE}
+pred_mtry17 <- predict(model_mtry17, data_trucks_knn_test, type = "prob")
+
+threshold_mtry17 <- min_cost_func(seq(from = 0.95, to = 0.96, length.out = 100), pred_mtry17, data_trucks_knn_test)
+min_cost_place_mtry17 <- which(threshold_mtry17$cost == min(threshold_mtry17$cost))[1]
+min_threshold_mtry17 <- threshold_mtry17$threshold[min_cost_place_mtry17]
+min_cost_mtry17 <- threshold_mtry17$cost[min_cost_place_mtry17]
+ggplot(threshold_mtry17, aes(x = threshold_mtry17$threshold, y = threshold_mtry17$cost)) +
+  geom_line()
+```
+
+```{r eval_mtry20, eval = FALSE}
+pred_mtry20 <- predict(model_mtry20, data_trucks_knn_test, type = "prob")
+
+threshold_mtry20 <- min_cost_func(seq(from = 0.95, to = 0.975, length.out = 100), pred_mtry20, data_trucks_knn_test)
+min_cost_place_mtry20 <- which(threshold_mtry20$cost == min(threshold_mtry20$cost))[1]
+min_threshold_mtry20 <- threshold_mtry20$threshold[min_cost_place_mtry20]
+min_cost_mtry20 <- threshold_mtry20$cost[min_cost_place_mtry20]
+ggplot(threshold_mtry20, aes(x = threshold_mtry20$threshold, y = threshold_mtry20$cost)) +
+  geom_line()
+```
