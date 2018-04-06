@@ -81,7 +81,7 @@ Row {data-height=200}
 
 ### **Klassenfeature**
 Aus der Beschreibung des Scania-Trucks Problems lässt sich herauslesen, dass gewisse Feature Klassendaten abbilden. 
-Das heißt, dass ein Feature auf mehrere Klasse aufgeteilt ist, wobei der Wert in der Klasse $A_i$ die Aufenthaltsdauer in der Klasse $A_i$ bedeutet, wobei $A$ das obergeordnete Feature ist. <br>
+Ein Feature ist hierbei auf mehrere Klassen aufgeteilt, wobei der Wert in der Klasse $A_i$ die Aufenthaltsdauer in der Klasse $A_i$ bedeutet, mit $A$ als obergeordnetem Feature. <br>
 Beispielverteilung der Feature **ag** & **ay**:
 
 <div style = "display: inline;">
@@ -1002,7 +1002,7 @@ kable(var_imp_df_cv10_2.5k[, 1:2] %>% head(5), "html") %>%
 Klassifizierung
 =======================================================
 
-Um die verursachten Kosten der Modelle ( Modellierungs-Tab ) ausrechnen zu können, muss nach der Vorhersage der Wahrscheinlichkeiten noch klassifiziert werden. Hierfür muss ein threshold gewählt werden, nachdem eine Observation entweder der fehlerhaften oder der fehlerfreien Klasse zugeordnet werden. <br>
+Um die verursachten Kosten der Modelle ( Modellierungs-Tab ) ausrechnen zu können, muss nach der Vorhersage der Wahrscheinlichkeiten noch klassifiziert werden. Hierfür muss ein threshold gewählt werden, nachdem eine Observation entweder der fehlerhaften oder der fehlerfreien Klasse zugeordnet wird. <br>
 Dies geschieht in 3 Schritten: <br>
 1.) Berechne die Kosten für die thresholds im Intervall $[0,1]$ mit Schrittweite $\frac{1}{100}$ <br>
 Wiederhole: <br>
