@@ -1,3 +1,25 @@
+.navbar {
+	background: #88ab33;
+	border-color: #88ab33;
+}
+
+.navbar-brand {
+	color: white!important;
+}
+
+.navbar-inverse .navbar-nav>.active>a,
+.navbar-inverse .navbar-nav>.active>a:hover,
+.navbar-inverse .navbar-nav>.active>a:focus 
+{
+	 color: white;
+	 background-color: #6a8230!important;
+}
+
+.nav>li>a:hover {
+	background-color: #6a8230!important;
+}
+	
+
 .bordered {
 	color: #555;
 	border-radius: 10px;

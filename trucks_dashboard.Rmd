@@ -45,7 +45,7 @@ Column {data-width=1}
 -----------------------------------------------------------------------
 
 ### **Problemstellung** {data-height=700}
-Der Scania-Trucks Datensatz kommt mit 171 anonymisierten Featuren sowie 76000 Observationen, welche im Verhältnis 60.000 zu 16.000 in Trainings- bzw. Testdaten aufgeteilt sind. Jede Observation enthält die Information, ob ein Fehler im Luftdruckssystem ( im Folgenden **LDS** genannt ) vorliegt oder nicht. <br><br>
+Der Scania-Trucks-Datensatz kommt mit 171 anonymisierten Featuren sowie 76000 Observationen, welche im Verhältnis 60.000 zu 16.000 in Trainings- bzw. Testdaten aufgeteilt sind. Jede Observation enthält die Information, ob ein Fehler im Luftdruckssystem ( im Folgenden **LDS** genannt ) vorliegt oder nicht. <br><br>
 Die Problemstellung lautet: <br>
 <div class = "bordered">
 *Sage für jede Observation im Testdatensatz voraus, ob ein Fehler im LDS vorliegt oder nicht. Minimiere dabei folgende Kostenfunktion:* <br>
@@ -61,16 +61,14 @@ Der Fehler 2. Art, hier **F**alse **N**egative, bedeutet, dass man eine Observat
 </div> <br><br>
 
 ### **Hintergrund** {data-height=300}
-Das Scania-Trucks Problem wurde auf der **IDA 2016** vorgestellt. Die IDA ist ein internationales Symposium über intelligente Datenanalyse, welche 2016 im Kontext des **maschinellen Lernens** das Industrieproblem für die Öffentlichkeit zugänglich gemacht hat. Scania, Mitsponsor der IDA, hat auf die beiden kostengünstigstens Modelle einen Preis von 500$ aussgeschrieben, sowie einen Rednerspot auf der **IDA** selbst. <br><br>
-
-<div><img src = "Scania.png" alt = "Scania Logo" height = "100%" "width = "100%"></div>
+Das Scania-Trucks-Problem wurde auf der **IDA 2016** vorgestellt. Die IDA ist ein internationales Symposium über intelligente Datenanalyse, welche 2016 im Kontext des **maschinellen Lernens** das Industrieproblem für die Öffentlichkeit zugänglich gemacht hat. Scania, Mitsponsor der IDA, hat auf die beiden kostengünstigsten Modelle einen Preis von 500$ aussgeschrieben, sowie einen Rednerspot auf der **IDA** selbst. <br><br>
 
 Column {data-width=3}
 ----------------------------------------------------------------------
 
 ###
 <center>
-<div style = "display: inline-block; height: 90vh;"> <img src = "Titelbild.png" alt = "Titel" height = "100%"  width = "100%"></div>
+<div style = "display: inline-block; height: 90vh;"> <img src = "eoda-Titelbild.png" alt = "Titel" height = "100%"  width = "100%"></div>
 </center>
 
 Datensatz {data-orientation=rows}
@@ -80,8 +78,8 @@ Row {data-height=200}
 -----------------------------------------------
 
 ### **Klassenfeature**
-Aus der Beschreibung des Scania-Trucks Problems lässt sich herauslesen, dass gewisse Feature Klassendaten abbilden. 
-Ein Feature ist hierbei auf mehrere Klassen aufgeteilt, wobei der Wert in der Klasse $A_i$ die Aufenthaltsdauer in der Klasse $A_i$ bedeutet, mit $A$ als obergeordnetem Feature. <br>
+Aus der Beschreibung des Scania-Trucks-Problems lässt sich herauslesen, dass gewisse Feature Klassendaten abbilden. 
+Ein Feature ist hierbei auf mehrere Klassen aufgeteilt, wobei der Wert in der Klasse $A_i$ die Aufenthaltsdauer in der Klasse $A_i$ bedeutet. $A$ ist das obergeordnete Feature. <br>
 Beispielverteilung der Feature **ag** & **ay**:
 
 <div style = "display: inline;">
@@ -164,7 +162,8 @@ ggplot(ay_mean_df, aes(x = labels, y = mean)) +
   geom_bar(stat = "identity", fill = "#88ab33") +
   theme_minimal() +
   ggtitle("Verteilung des Mittelwertes") +
-  xlab("") + ylab("")
+  xlab("") + ylab("") + 
+  theme(axis.text.x = element_blank())
 ```
 </div>
 
@@ -382,10 +381,10 @@ Column {data-width=100}
 
 ### **NA-Analyse**
 
-Der Scania-Trucks Datensatz weist eine hohe Zahl an fehlenden Werten ( hier im Folgenden **NA's** genannt) auf. <br>
+Der Scania-Trucks-Datensatz weist eine hohe Zahl an fehlenden Werten ( hier im Folgenden **NA's** genannt) auf. <br>
 Eine Möglichkeit besteht darin, eine gewisse Anzahl an NA's zuzulassen und dementsprechend die Anzahl der Feature zu reduzieren. Alle Observationen, welche nach der **Featurereduktion** noch NA's enthalten, werden entfernt. Unterschieden wird zwischen allen Observationen ( fehlerfrei & fehlerhaft ), und den fehlerhaften Observationen ( Observationen die einen Fehler aufweisen ). <br>
 Die Anzahl der vorhandenen NA's in jedem der 171 Feature liefert uns die verschiedenen **NA-Grenzen**. <br>
-Folgende Auszug aus der Tabelle liefert einen Überblick über die NA Grenzen: 
+Folgender Auszug aus der Tabelle liefert einen Überblick über die NA-Grenzen: 
 
 ```{r NA_data_frame, eval = FALSE}
 # setup the whole dataset
@@ -430,7 +429,7 @@ result_NA <- result_NA %>%
 
 ```{r NA_table}
 # print table for the na boundaries
-kable(result_NA %>% head(5), "html", caption = "NA Grenzen, Featureanzahl ( Grün ), allgemeiner Observationsverlust ( Orange ) & fehlerhafter Observationsverlust ( Blau )") %>%
+kable(result_NA %>% head(5), "html", caption = "NA-Grenzen, Featureanzahl ( Grün ), allgemeiner Observationsverlust ( Orange ) & fehlerhafter Observationsverlust ( Blau )") %>%
   kable_styling("striped") %>%
   column_spec(c(2,5), background = "#88ab33", color = "white") %>%
   column_spec(c(3,6), background = "#F98948", color = "white") %>%
@@ -455,21 +454,21 @@ ggplot(result_NA) +
 
 <div class = "bordered">
 <center>**Featuregewinnung:**</center> <br>
-Aus der Tabelle lässt sich erkennen, dass bei den unterschiedlichen NA-Grenzen die Anzahl an **gewonnener Feature** stark schwankt. So gewinnt man beim Sprung von 0 auf 195 NA's lediglich 1 Feature dazu, beim Sprung von 861 auf 863 NA's aber direkt 30 Feature. Das **NA-Verhalten** ist also alles andere als proportional. <br>
+Die Tabelle zeigt, dass bei den unterschiedlichen NA-Grenzen die Anzahl an **gewonnener Feature** stark schwankt. So gewinnt man beim Sprung von 0 auf 195 NA's lediglich 1 Feature dazu, beim Sprung von 861 auf 863 NA's aber direkt 30 Feature. Das **NA-Verhalten** ist also alles andere als proportional. <br>
 Die Entscheidung, welche NA-Grenze man als Auschlussverfahren nimmt, hängt aber nicht nur von der Featuregewinnung ab.
 </div> <br>
 <div class = "bordered">
 <center>**Allgemeiner Observationsverlust:**</center> <br>
-Alle Feature im späteren Modell zu berücksichten würde nichts bringen, wenn man nur noch auf 5% der ursprünglichen Daten trainieren kann. Deshalb spielt der **Observationsverlust** eine starke Rolle in der Entscheidung. Hier zeichnet sich ein starker Sprung von 5598 auf 12012 NA's ab. Evaluiert man also die Grenzen anhand des Observationsverlustes, sollte man nicht über die Grenze von 5598 hinaus gehen, da direkt danach c.a. 10% der LKW's zusätzlich verloren gehen. 
+Alle Feature im späteren Modell zu berücksichten würde nichts bringen, wenn man nur noch auf 5% der ursprünglichen Daten trainieren kann. Deshalb spielt der **Observationsverlust** eine starke Rolle in der Entscheidung. Hier zeichnet sich ein starker Sprung von 5598 auf 12012 NA's ab. Evaluiert man also die Grenzen anhand des Observationsverlustes, sollte man nicht über die Grenze von 5598 hinaus gehen, da direkt danach c.a. 10% der betrachteten LKW zusätzlich verloren gehen. 
 </div> <br>
-Der Scania-Trucks Datensatz weist noch ein Problem zusätzlich auf. Von den 76000 Observationen sind lediglich **1375** fehlerhaft. Dadurch könnte es passieren, dass wir bei der Wahl der NA-Grenze alle fehlerhaften Observationen verlieren. <br>
+Der Scania-Trucks-Datensatz weist noch ein zusätzliches Problem auf. Von den 76000 Observationen sind lediglich **1375** fehlerhaft. Dadurch könnte es passieren, dass man bei der Wahl der NA-Grenze alle fehlerhaften Observationen verliert. <br>
 Demnach muss zusätzlich folgende Variable mit einkalkuliert werden: <br><br>
 <div class = "bordered">
 <center>**Fehlerhafter Observationsverlust:**</center> <br>
-Der fehlerhafte Oberservationsverlust beschreibt die Anzahl der Observationen die bei der Wahl der NA-Grenze verloren gehen und zusätzlich einen Fehler im LDS aufweisen. Anhand der geringen Fehlerrate im Datensatz wäre es fatal, zu viele der fehlerhaften Fahrzeuge zu verlieren, da ein Modell so möglicherweise auf ausschließlich fehlerfreien Daten trainieren könnte. Die Grenze für fehlerhafte Observationen findet sich in der Tabelle offensichtlich beim Sprung von 928 NA's auf 3188 NA's. Obwohl man hier nur 1 Feature dazu gewinnen würde, fallen 30% der fehlerhaften Observationen dadurch raus. Die Grenze ist demnach also bei 928 NA's zu setzen.
+Der fehlerhafte Oberservationsverlust beschreibt die Anzahl der Observationen, die bei der Wahl der NA-Grenze verloren gehen und zusätzlich einen Fehler im LDS aufweisen. Anhand der geringen Fehlerrate im Datensatz wäre es fatal zu viele der fehlerhaften Fahrzeuge zu verlieren, da ein Modell so möglicherweise auf ausschließlich fehlerfreien Daten trainieren könnte. Die Grenze für fehlerhafte Observationen findet sich in der Tabelle offensichtlich beim Sprung von 928 NA's auf 3188 NA's. Obwohl man hier nur 1 Feature dazu gewinnen würde, fallen 30% der fehlerhaften Observationen dadurch raus. Die Grenze ist demnach also bei 928 NA's zu setzen.
 </div> <br>
 <center>**<u>Fazit:</u>**</center>
-Die NA-Analyse zeigt, dass verschiedene Breakpoints existieren, um eine gewisse Anzahl von Featuren zu erhalten / nicht zu viele Observationen zu verlieren. Als ein erster Gedankengang ist diese Art der Analyse nicht schlecht und verschafft einen guten Überblick über den Datensatz, der individuelle Informationsgehalt der einzelnen Feature wird dabei aber nicht berücksichtigt. Um außerdem auf dem kompletten Trainingsset vorhersagen treffen zu können, müssen die fehlenden Werte aufgefüllt werden, anstatt **NA-Reduktion** zu betreiben. Hierzu stehen Möglichkeiten wie beispielsweise die **knn-imputation** zur Verfügung. Im Pre-Processing-Tab wird diese Möglichkeit evaluiert.
+Die NA-Analyse zeigt, dass verschiedene Breakpoints existieren, um eine gewisse Anzahl von Featuren zu erhalten / nicht zu viele Observationen zu verlieren. Als ein erster Gedankengang ist diese Art der Analyse nicht schlecht und verschafft einen guten Überblick über den Datensatz. Der individuelle Informationsgehalt der einzelnen Feature wird dabei aber nicht berücksichtigt. Um außerdem auf dem kompletten Trainingsset Vorhersagen treffen zu können, müssen die fehlenden Werte aufgefüllt werden, anstatt **NA-Reduktion** zu betreiben. Hierzu stehen Möglichkeiten wie beispielsweise die **knn-imputation** zur Verfügung. Im Pre-Processing-Tab wird diese Möglichkeit evaluiert.
 
 
 
@@ -481,7 +480,7 @@ Column {data-width=100}
 
 
 Die **Datensatzanalyse** hat gezeigt, dass viele der Klassendaten nicht gleichmäßig verteilt sind.
-Oftmals sind die Klassen eines Klassenfeatures für fast alle Observationen 0, andere Klassen hingegen sind mit den unterschiedlichsten Größenordnungen von Zahlen gefüllt. <br>
+Oftmals sind die Klassen eines Klassenfeatures für fast alle Observationen 0. Andere Klassen hingegen sind mit den unterschiedlichsten Größenordnungen von Zahlen gefüllt. <br>
 Hinzu kommt, dass die Werte in den verschiedenen Klassen **absolute** Daten sind: <br><br>
 <center>
 <div class = "bordered" style = "width: 30vw; font-size: 20px;">
@@ -492,7 +491,7 @@ ist **nicht notwendigerweise gleich** für alle Observationen.
 
 <br>
 
-Um das Problem der absoluten Klassendaten zu beseitigen ist es sinnvoll diese zu **relativieren**. Man stellt also jeden absoluten Wert in $A_i$ in **prozentuellen Bezug** zu der **Gesamtaufenthaltszeit** der Observation in der Klasse $A$. <br>
+Um das Problem der absoluten Klassendaten zu beseitigen ist es sinnvoll, diese zu **relativieren**. Man stellt also jeden absoluten Wert in $A_i$ in **prozentuellen Bezug** zu der **Gesamtaufenthaltszeit** der Observation in der Klasse $A$. <br>
 Dadurch ergibt sich folgende Formel für die neuen Werte $\tilde{A}$: <br><br>
 <center>
 <div class = "bordered" style = "font-size: 20px; width: 30vw;">
@@ -612,7 +611,7 @@ data_trucks_knn_training <- predict(data_trucks_knn, data_trucks_perc[1:60000, ]
 data_trucks_knn_test <- predict(data_trucks_knn, data_trucks_perc[60001:76000, ])
 ```
 
-Zusätzlich zu seinen Klassendaten verfügt der Datensatz über, wie bereits erwähnt, eine vielzahl von **NA's** ( fehlende Werte ). <br>
+Zusätzlich zu seinen Klassendaten verfügt der Datensatz, wie bereits erwähnt, über eine Vielzahl von **NA's** ( fehlende Werte ). <br>
 Eine Möglichkeit, diese aufzufüllen, bietet hier die **knn-Imputation** ( *k-nearest-neighbours-Schätzung* ). <br><br>
 Die Schätzung erfolgt in **3** Schritten. <br>
 <center>
@@ -621,7 +620,7 @@ Die Schätzung erfolgt in **3** Schritten. <br>
 
 <br>
 
-Folgende Tabellenausschnitte verdeutlicht diese Schritte: <br><br>
+Folgende Tabellenausschnitte verdeutlichen diese Schritte: <br><br>
 
 <div style = "display: inline;">
 
@@ -702,7 +701,7 @@ Column {data-width=100}
 ### **Modellauswahl & Güte**
 
 Zur Lösung des **Klassifizierungsproblems** wird ein **Random-Forest-Modell** verwendet. Als **Parameterraster** wird $mtry = 13$ und $splitrule =$ *gini-Index* verwendet. <br>
-Der Standardwert von $mtry = \sqrt{Anzahl \space der\space Feature}$ hat sich gegenüber verschiedenen Werten durchgesetzt. Der *gini-Index* wurde jeweils vom Modell als beste *splitrule* gewählt.
+Der Standardwert von $mtry = \sqrt{Anzahl \space der\space Feature}$ hat sich im Vergleich mit verschiedenen Werten durchgesetzt. Der *gini-Index* wurde jeweils vom Modell als beste *splitrule* gewählt.
 
 <br><br>
 
@@ -1002,12 +1001,12 @@ kable(var_imp_df_cv10_2.5k[, 1:2] %>% head(5), "html") %>%
 Klassifizierung
 =======================================================
 
-Um die verursachten Kosten der Modelle ( Modellierungs-Tab ) ausrechnen zu können, muss nach der Vorhersage der Wahrscheinlichkeiten noch klassifiziert werden. Hierfür muss ein threshold gewählt werden, nachdem eine Observation entweder der fehlerhaften oder der fehlerfreien Klasse zugeordnet wird. <br>
+Um die verursachten Kosten der Modelle ( Modellierungs-Tab ) ausrechnen zu können, muss nach der Vorhersage der Wahrscheinlichkeiten noch klassifiziert werden. Hierfür muss ein *threshold* gewählt werden, nachdem eine Observation entweder der fehlerhaften oder der fehlerfreien Klasse zugeordnet wird. <br>
 Dies geschieht in 3 Schritten: <br>
-1.) Berechne die Kosten für die thresholds im Intervall $[0,1]$ mit Schrittweite $\frac{1}{100}$ <br>
+1.) Berechne die Kosten für die *thresholds* im Intervall $[0,1]$ mit Schrittweite $\frac{1}{100}$ <br>
 Wiederhole: <br>
 2.) Plotte die Kostenfunktion und ermittle einen Bereich, in dem das Minimum vorliegt <br>
-3.) Wähle das Intervall $[a,b]$ in dem das Minimum vorliegt, um dieses genauer zu bestimmen
+3.) Wähle das Intervall $[a,b]$ in dem das Minimum vorliegt, um dieses genauer einschränken zu können
 
 
 Column
@@ -1032,7 +1031,7 @@ ggplot(threshold_df_cv10_0.5k, aes(x = threshold_df_cv10_0.5k$threshold, y = thr
 
 <br>
 
-<i>Ist der Algorithmus sich zu $\approx$ `r (min_threshold_cv10_0.5k*100) %>% signif(digits = 4)`% sicher, dass eine Observation fehlerfrei ist, klassifiziere diese als fehlerfrei, andernfalls klassifiziere sie als fehlerhaft. </i>
+<i>Ist der Algorithmus sich zu $\approx$ `r (min_threshold_cv10_0.5k*100) %>% signif(digits = 4)`% sicher, dass eine Observation fehlerfrei ist, klassifiziere diese als fehlerfrei. Andernfalls klassifiziere sie als fehlerhaft. </i>
 
 Column
 --------------------------------------------------------
@@ -1056,7 +1055,7 @@ ggplot(threshold_df_cv10_1k, aes(x = threshold_df_cv10_1k$threshold, y = thresho
 
 <br>
 
-<i>Ist der Algorithmus sich zu $\approx$ `r (min_threshold_cv10_1k*100) %>% signif(digits = 4)`% sicher, dass eine Observation fehlerfrei ist, klassifiziere diese als fehlerfrei, andernfalls klassifiziere sie als fehlerhaft. </i>
+<i>Ist der Algorithmus sich zu $\approx$ `r (min_threshold_cv10_1k*100) %>% signif(digits = 4)`% sicher, dass eine Observation fehlerfrei ist, klassifiziere diese als fehlerfrei. Andernfalls klassifiziere sie als fehlerhaft. </i>
 
 Column
 --------------------------------------------------------
@@ -1080,17 +1079,17 @@ ggplot(threshold_df_cv10_2.5k, aes(x = threshold_df_cv10_2.5k$threshold, y = thr
 
 <br>
 
-<i>Ist der Algorithmus sich zu $\approx$ `r (min_threshold_cv10_2.5k*100) %>% signif(digits = 4)`% sicher, dass eine Observation fehlerfrei ist, klassifiziere diese als fehlerfrei, andernfalls klassifiziere sie als fehlerhaft. </i>
+<i>Ist der Algorithmus sich zu $\approx$ `r (min_threshold_cv10_2.5k*100) %>% signif(digits = 4)`% sicher, dass eine Observation fehlerfrei ist, klassifiziere diese als fehlerfrei. Andernfalls klassifiziere sie als fehlerhaft. </i>
 
 Kostenvergleich {data-orientation=rows}
 =======================================================
-Um die Kostenersparnis unseres "Siegermodells" festzustellen benötigen wir Vergleichswerte. Nehmen wir im Folgenden an, es existieren keine datenanalytischen Methoden um dem Luftdruckssystemfehler in gewisser Weise vorzubeugen. Wie würde man vorgehen?
+Um die Kostenersparnis unseres "Siegermodells" festzustellen, benötigen wir Vergleichswerte. Nehmen wir im Folgenden an, es existieren keine datenanalytischen Methoden, um dem Luftdruckssystemfehler in gewisser Weise vorzubeugen. Wie würde man vorgehen?
 
 Row  {data-height=300}
 ------------------------------------------------------
 
 ### **Guessing at Random**
-Eine Möglichkeit bietet sich darin, einfach zu raten. Sicherlich nicht besonders effektiv, aber vielleicht lassen sich so ein paar der betroffenen LKW's vorsorglich in die Werkstatt schicken. <br><br>
+Eine Möglichkeit bietet sich darin, einfach zu raten. Sicherlich ist diese Methode nicht besonders effektiv, aber vielleicht lassen sich so ein paar der betroffenen LKW vorsorglich in die Werkstatt schicken. <br><br>
 
 <center>
 ```{r guessing_at_random}
@@ -1113,7 +1112,7 @@ random_cost <- random_table[2] * 10 + random_table[3] * 500
 </center>
 
 ### **Das wird schon**
-Eine weiter Möglichkeit wäre, auf sein Glück zu vertrauen und keinen LKW in die Werkstatt zu schicken, "das wird schon". Auch wenn das sehr riskant ist, sind, wie bereits in der Datensatzanalyse gezeigt, nur wenige der LKW's überhaupt betroffen. <br><br>
+Eine weitere Möglichkeit wäre, auf sein Glück zu vertrauen und keinen LKW in die Werkstatt zu schicken - "das wird schon". Auch wenn das sehr riskant ist, sind, wie bereits in der Datensatzanalyse gezeigt, nur wenige der LKW überhaupt betroffen. <br><br>
 
 <center>
 ```{r complete_luck}
@@ -1134,7 +1133,7 @@ luck_cost <- luck_table[2] * 10 + luck_table[3] * 500
 </center>
 
 ### **Sicher ist sicher**
-Eine letzte Möglichkeit liefert die "Sicherheitsvariante". Wenn man jeden LKW in die Werkstatt schickt, kann zumindest kein Fehler übersehen werden, aber auch das bringt natürlich gewisse Kosten mit sich. <br><br>
+Eine letzte Möglichkeit liefert die "Sicherheitsvariante". Wenn man jeden LKW in die Werkstatt schickt, kann zumindest kein Fehler übersehen werden. Aber auch das bringt natürlich gewisse Kosten mit sich. <br><br>
 
 <center>
 ```{r safe}
@@ -1157,12 +1156,14 @@ Row {data-height=100}
 -------------------------------------------------------
 
 ### **Fazit**
-Natürlich gäbe es noch mehr Möglichkeiten, in dem man beispielsweise eine Stichprobe der Größe *n* in die Werkstatt schickt und den Rest so fahren lässt, es zeigt sich aber doch sehr deutlich, wie kostenintensiv solche Problematiken ohne Datenanalytik werden können. <br><br>
-Vertraut Scania auf die getroffenen Vorhersagen, so entstehen Gesamtkosten von ca. 9170, schickt die Firma alle LKW's in die Werkstatt, entstehen schnell Kosten von über 156000. <br><br>
+Natürlich gäbe es noch mehr Möglichkeiten. Beispielsweise, in dem man eine Stichprobe der Größe *n* in die Werkstatt schickt und den Rest so fahren lässt. Es zeigt sich aber doch sehr deutlich, wie kostenintensiv solche Problematiken ohne Datenanalytik werden können. <br><br>
+Vertraut Scania auf die getroffenen Vorhersagen, so entstehen Gesamtkosten von ca. 9170. Schickt die Firma alle LKW in die Werkstatt, entstehen schnell Kosten von über 156000. <br><br>
 Der Aspekt *Predictive Maintenance* zur Kostenminimierung ist also ein essenzieller Bestandteil moderner Unternehmen und aus dem Handwerkskasten der Statistiker und Analytiker nicht mehr wegzudenken.
 
-Über Uns {data-orientation=rows}
+Über eoda {data-orientation=rows}
 =======================================================
+
+<div style = "height: 70vh">
 
 <u>Über die eoda GmbH:</u> <br>
 eoda ist ein auf Data Science spezialisiertes IT-Unternehmen. Das Portfolio umfasst Consulting, Analytic Services, Software und Training. Die Leistungen erstrecken sich dabei über den gesamten Workflow vom Datenmanagement über die Analyse und Interpretation der Ergebnisse bis hin zur Integration von Analyse-Workflows in bestehende Prozesse und Applikationen. Das interdisziplinäre Team von eoda kombiniert fundiertes Wissen über Geschäftsprozesse mit der kompetenten Anwendung der passenden statistischen Analyseverfahren.
@@ -1186,12 +1187,16 @@ eoda provides a unique holistic training and qualification concept for R and Pyt
 For further information, contact us on:
 <center><a href = "www.eoda.de">www.eoda.de</a></center>
 
-<br><br><br><br><br><br><br><br><br>
+</div>
 
-<center><img src = "eoda_logo.png" alt = "Logo" height = "35%" width = "35%"></center>
+<div style = "height: 30vh; text-align: right; padding-right: 70px;">
+<img src = "eoda_logo.png" alt = "Logo" style = "height: "25%"; width = "25%";">
+</div>
 
 
 ```{r new_model, eval = FALSE}
+# only used for comparison
+
 control_cv_five_ten <- trainControl(method = "repeatedcv",
                                         number = 5,
                                         repeats = 10,
